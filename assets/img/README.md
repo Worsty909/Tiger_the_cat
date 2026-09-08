@@ -1,8 +1,11 @@
 # Obrázky
 
+Všech 11 obrázků tu už je, jako `webp` o šířce 900 px (titulka 1200 px).
+
 Hra hledá pro každou scénu soubor `<klíč>.<přípona>` v této složce. Zkouší
-`avif`, `webp`, `png`, `jpg`, `jpeg` — v tomhle pořadí. Stačí tedy soubor
-nakopírovat sem a pojmenovat podle klíče, na formátu nezáleží.
+`avif`, `webp`, `png`, `jpg`, `jpeg` — v tomhle pořadí. Když chceš některý
+obrázek vyměnit, stačí ho sem nakopírovat pod správným klíčem; na formátu
+nezáleží.
 
 Když tu soubor není, hra ho načte z CDN (adresy jsou v `js/assets.js`).
 Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál.

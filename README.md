@@ -15,15 +15,11 @@ komedie, jeden opravdu nepříjemný nález a zvrat na konci.
 Otevři `index.html` v prohlížeči. To je všechno — žádný build, žádné závislosti,
 čisté HTML/CSS/JS.
 
-Obrázky se hledají nejdřív lokálně v `assets/img/`, a když tam nejsou, načtou se
-z CDN. Aby byl repozitář soběstačný (a hra fungovala offline), spusť jednou:
-
-```bash
-bash tools/fetch-assets.sh
-```
-
-Když se nepodaří načíst ani jedno, hra vykreslí stylizovaný náhradní panel —
-dohrát se dá i úplně bez grafiky.
+Všech 11 obrázků je součástí repozitáře v `assets/img/` (dohromady 442 kB), takže
+hra funguje i offline. Kdyby některý chyběl, načte se z CDN — adresy jsou
+v `js/assets.js` a `tools/fetch-assets.sh` je umí stáhnout znovu. Když se
+nepodaří ani to, hra vykreslí stylizovaný náhradní panel: dohrát se dá i úplně
+bez grafiky.
 
 ## Co hra umí
 
