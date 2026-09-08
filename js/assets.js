@@ -33,9 +33,15 @@
     'tiger-ref':    'hf_20260908_180529_0aaa8f78-d892-499d-9489-fa2ad192259d.png'
   };
 
+  // Lokální soubor může mít libovolnou z běžných přípon — ať se dá obrázek
+  // do assets/img/ prostě jenom nakopírovat, bez převádění.
+  var LOCAL_EXT = ['avif', 'webp', 'png', 'jpg', 'jpeg'];
+
   function sources(key) {
     if (!key) return [];
-    var list = ['assets/img/' + key + '.avif', 'assets/img/' + key + '.webp'];
+    var list = LOCAL_EXT.map(function (ext) {
+      return 'assets/img/' + key + '.' + ext;
+    });
     if (REMOTE[key]) list.push(CDN + REMOTE[key]);
     return list;
   }
