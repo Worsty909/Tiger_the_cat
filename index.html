@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiger — Cesta domů</title>
+<meta name="description" content="Textově-grafická úniková hra o bengálské kočce jménem Tiger, která se ztratila a hledá cestu domů.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== TITULNÍ OBRAZOVKA ===== -->
+  <section id="screen-title" class="screen is-active">
+    <div class="title-art" id="titleArt"></div>
+    <div class="title-inner">
+      <p class="title-kicker">Úniková hra</p>
+      <h1 class="title-name">TIGER</h1>
+      <p class="title-sub">Cesta domů</p>
+      <p class="title-blurb">
+        Bengálská kočka. Jedna otevřená dodávka. Jedno velmi špatné rozhodnutí.<br>
+        Vyřeš hádanky, dostaň se ven a najdi cestu domů.
+      </p>
+      <div class="title-buttons">
+        <button class="btn btn-primary" id="btnContinue" hidden>Pokračovat</button>
+        <button class="btn btn-primary" id="btnNewGame">Nová hra</button>
+        <button class="btn btn-ghost" id="btnAbout">O hře</button>
+      </div>
+      <p class="title-episode">Mise 1 · <span class="amber">Kdo zhasl slunce</span></p>
+    </div>
+  </section>
+
+  <!-- ===== HRA ===== -->
+  <section id="screen-game" class="screen">
+    <header class="topbar">
+      <button class="icon-btn" id="btnMenu" title="Menu" aria-label="Menu">&#9776;</button>
+      <div class="topbar-mid">
+        <span class="chapter" id="hudChapter">Mise 1</span>
+        <span class="dot">·</span>
+        <span class="place" id="hudPlace">&nbsp;</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="btnJournal" title="Deník" aria-label="Deník">&#128214;<span class="badge" id="journalBadge" hidden>0</span></button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <div class="scene-art" id="sceneArt">
+        <img id="sceneImg" alt="">
+        <div class="scene-art-fallback" id="sceneFallback"><span id="sceneFallbackText"></span></div>
+        <div class="scene-vignette"></div>
+      </div>
+
+      <div class="scene-body">
+        <h2 class="scene-title" id="sceneTitle"></h2>
+        <div class="dialogue" id="dialogue"></div>
+
+        <div class="advance-hint" id="advanceHint" hidden>
+          <span>Pokračuj klepnutím</span> <span class="caret">▾</span>
+        </div>
+
+        <div class="puzzle-slot" id="puzzleSlot" hidden></div>
+
+        <div class="actions" id="actions" hidden></div>
+      </div>
+    </main>
+
+    <footer class="inventory-bar" id="inventoryBar" hidden>
+      <span class="inv-label">Batoh</span>
+      <div class="inv-items" id="invItems"></div>
+    </footer>
+  </section>
+
+  <!-- ===== KONEC MISE ===== -->
+  <section id="screen-end" class="screen">
+    <div class="end-card">
+      <p class="end-kicker" id="endKicker">Konec mise 1</p>
+      <h2 class="end-title" id="endTitle"></h2>
+      <div class="end-text" id="endText"></div>
+      <div class="end-stats" id="endStats"></div>
+      <p class="end-next" id="endNext"></p>
+      <div class="title-buttons">
+        <button class="btn btn-primary" id="btnEndJournal">Otevřít deník</button>
+        <button class="btn btn-ghost" id="btnEndMenu">Zpět do menu</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== MODÁLY ===== -->
+<div class="modal-backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="Zavřít">&times;</button>
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="js/engine.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/puzzles.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/missions/mission-01.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

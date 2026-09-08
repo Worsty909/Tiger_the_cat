@@ -1,0 +1,157 @@
+# Příběhová bible a návod na další misi
+
+## Kdo je Tiger
+
+Bengálská kočka. Zlatá srst s rozetami, zelené oči, červený obojek s ošoupanou
+mosaznou známkou. Mluví suše, ironicky, s načasováním stand-up komika — ale
+jenom dokud se nezmíní domov. Pak je ticho.
+
+**Klíč k jeho hlasu:** Tiger vtipkuje, když se bojí. Čím vážnější scéna, tím
+kratší věty. V nejtěžších chvílích neřekne skoro nic — a to má bolet.
+
+## Kam příběh míří
+
+Mise 1 vypadá jako nehoda: kočka usnula v dodávce. Není to nehoda.
+
+Nitky schválně nechané viset:
+
+- **Fotka z léta 2009.** Je na ní Tiger. Fotka je starší než on. Tohle je
+  hlavní záhada celé série a nemá se vysvětlit brzy.
+- **Kdo zamkl bednu.** Bertík říká, že to byl někdo, kdo znal kód, protože si
+  ho vymyslel sám. Před dlouhou dobou.
+- **Jméno MIKEŠ.** Na plakátu je Tigerova fotka a cizí jméno. Tiger se tak
+  nejmenuje. Někdo ho ale tak volal — a hledal ho.
+- **Podpis „E."** Dětské písmo, tužka, přeškrtnuté telefonní číslo. Ta věta
+  („prosím vrať se.") je emocionální kotva celé série.
+- **Bertíkova otázka.** „Neptej se ho *proč*. Zeptej se ho, *jak dlouho už to
+  dělá*." — naznačuje, že Tiger není první.
+
+**Tón:** vtipné a hluboké se musí střídat, ne mísit. Scéna je buď komická,
+nebo srdcervoucí. Když je obojí najednou, není ani jedno.
+
+## Přidání další mise
+
+Mise je čistě datový soubor. Zkopíruj `js/missions/mission-01.js`, změň `id`,
+`number` a `start`, zaregistruj skript v `index.html` a hotovo — engine se
+o zbytek postará.
+
+### Kostra
+
+```js
+Tiger.registerMission({
+  id: 'm02',
+  number: 2,
+  title: 'Ulice, které si pamatují',
+  shortTitle: 'Mise 2',
+  start: 'prvni-scena',
+
+  items:    { klic: { emo: '🔑', name: 'Klíč', desc: 'Od čeho?' } },
+  journal:  { 'j-neco': { title: 'Nadpis', text: 'Tigerův zápisek.' } },
+  epilogue: { title: '…', text: [ /* stejný formát jako text scény */ ], next: '…' },
+
+  scenes: [ /* … */ ]
+});
+```
+
+### Scéna
+
+```js
+{
+  id: 'prvni-scena',
+  place: 'Ulice',            // do horní lišty
+  title: 'Nadpis scény',
+  bg: 'klic-obrazku',        // js/assets.js → assets/img/<klic>.avif
+  give: ['klic'],            // předměty do batohu při vstupu
+  set: { neco: true },       // příznaky
+  journal: 'j-neco',         // zápis do deníku
+  text: [ /* viz níže */ ],
+  puzzle: { /* nepovinné */ },
+  actions: [
+    { label: 'Jít dál', goto: 'dalsi-scena' },
+    { label: 'Otevřít dveře', goto: 'x', if: g => g.has('klic') },
+    { label: 'Konec mise', end: true }
+  ]
+}
+```
+
+### Text scény
+
+Pole řádků, které se odkrývají po jednom. Podporované tvary:
+
+```js
+text: [
+  'Obyčejný text vypravěče. Hvězdičky dělají *důraz*.',
+  { tiger:  'Tigerova replika.' },
+  { bertik: 'Replika vedlejší postavy.' },
+  { hlas:   'Někdo, koho není vidět.' },
+  { note:   'Text na papíře.\nZobrazí se jako lístek.' },
+  { sys:    'Systémová poznámka.' },
+  { beat: true }              // pauza — vizuální předěl
+]
+```
+
+Nová postava = přidat jméno do `SPEAKERS` v `js/ui.js` a barvu do `css/style.css`
+(`.line-<klic> .say-who` a `.say-text`).
+
+### Typy hádanek
+
+Všechny berou `id`, `head`, `prompt`, `hints[]`, `success`, `goto` a nepovinně
+`give` / `set` / `journal`.
+
+**`input`** — napsaná odpověď. Porovnává se bez diakritiky a velikosti písmen.
+```js
+{ kind: 'input', answers: ['klavír', 'piano'],
+  wrong: ['Hlášky při špatné odpovědi.'],
+  nearMiss: [ { when: ['housle'], say: 'Teplo!' } ] }
+```
+
+**`lights`** — přepnutí páčky přepne i oba sousedy, cíl je rozsvítit všechno.
+```js
+{ kind: 'lights', initial: [0,1,0,1,0], labels: ['I','II','III','IV','V'] }
+```
+Řešitelnost ověří `node tools/validate-mission.js` hrubou silou.
+
+**`sequence`** — klikání ve správném pořadí. `layout` je `buttons`, `piano`
+nebo `stack`. Volba s `trap` je past s vlastní hláškou.
+```js
+{ kind: 'sequence', layout: 'piano',
+  options: [{ id: 'h', label: 'H' }, /* … */],
+  solution: ['h','a','f'] }
+```
+
+**`choice`** — jedna volba z několika. Volba s `correct: false` je špatně,
+volba se `set` nastaví příznak. Bez `correct: false` nejde vybrat špatně —
+hodí se na rozhodnutí, která mají mít následky až později.
+
+**Nový typ** se registruje zvenčí, engine se nemusí měnit:
+```js
+Tiger.Puzzles.register('muj-typ', {
+  render: function (host, puzzle, api) {
+    // api.solve() / api.fail('hláška') / api.say(text, 'hint') / api.game
+  }
+});
+```
+
+## Pravidla, která drží hru pohromadě
+
+1. **Hra se nesmí dát pokazit.** Žádná akce nesmí hráče trvale zablokovat.
+2. **Každá hádanka má nápovědy** a poslední z nich je skoro odpověď. Validátor
+   hádanku bez nápovědy neprojde.
+3. **Žádná obratnost, žádný čas.** Jenom klikání a psaní.
+4. **Nová postava dostane jeden vtip a jednu vážnou větu.** Bertík je měřítko.
+5. **Před commitem obsahu spusť validátor.** Chyby v grafu jsou levné najít
+   a drahé ladit v prohlížeči.
+
+## Obrázky
+
+Generováno přes Higgsfield, model `nano_banana_pro`, poměr 3:2 (titulka 16:9).
+
+Společná hlavička promptu, ať série drží pohromadě:
+
+> Children's storybook illustration, flat vector art with thick soft outlines,
+> warm limited palette (deep teal shadows, dusty amber light, warm cream
+> highlights), subtle paper grain, cozy-mystery mood, no text, no watermark.
+
+Aby Tiger vypadal ve všech scénách stejně, předává se do každé generace
+referenční portrét (`tiger-ref` v `js/assets.js`) jako `image_references`.
+Nový obrázek = přidat řádek do `js/assets.js` a do `tools/fetch-assets.sh`.
