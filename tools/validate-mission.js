@@ -12,22 +12,23 @@ const sandbox = { console };
 sandbox.window = sandbox;
 vm.createContext(sandbox);
 
-for (const f of ['js/engine.js', 'js/assets.js', 'js/missions/mission-01.js']) {
+const missionFiles = fs.readdirSync(path.join(root, 'js/missions'))
+  .filter(f => f.endsWith('.js')).sort().map(f => 'js/missions/' + f);
+
+for (const f of ['js/engine.js', 'js/assets.js', ...missionFiles]) {
   vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), sandbox, { filename: f });
 }
 
 const Tiger = sandbox.Tiger;
-const mission = Tiger.getMission(Tiger.firstMissionId());
 
 let errors = 0;
 const fail = (m) => { errors++; console.error('  ✗ ' + m); };
 const ok = (m) => console.log('  ✓ ' + m);
 
+function checkMission(mission) {
 const ids = new Set(mission.scenes.map(s => s.id));
 const items = new Set(Object.keys(mission.items || {}));
 const journal = new Set(Object.keys(mission.journal || {}));
-
-console.log(`\nMise ${mission.number}: „${mission.title}"  (${mission.scenes.length} scén)\n`);
 
 // 1) všechny cíle přechodů existují
 const targets = [];
@@ -40,7 +41,14 @@ for (const s of mission.scenes) {
 targets.forEach(([t, where]) => { if (!ids.has(t)) fail(`neexistující scéna "${t}" (${where})`); });
 if (!errors) ok(`${targets.length} přechodů míří na existující scény`);
 
-// 2) předměty a zápisky v deníku jsou definované
+// 2) každá scéna má obrázek, který manifest zná
+const known = new Set(Object.keys(sandbox.Tiger.Assets.remote));
+for (const s of mission.scenes) {
+  if (!s.bg) fail(`scéna ${s.id}: chybí obrázek (bg)`);
+  else if (!known.has(s.bg)) fail(`scéna ${s.id}: obrázek "${s.bg}" není v js/assets.js`);
+}
+
+// 3) předměty a zápisky v deníku jsou definované
 for (const s of mission.scenes) {
   [].concat(s.give || [], s.puzzle?.give || []).forEach(i => {
     if (!items.has(i)) fail(`scéna ${s.id}: neznámý předmět "${i}"`);
@@ -51,7 +59,7 @@ for (const s of mission.scenes) {
 }
 
 // 3) hádanky dávají smysl
-const kinds = new Set(['input', 'lights', 'sequence', 'choice']);
+const kinds = new Set(['input', 'lights', 'sequence', 'choice', 'pairs', 'rings']);
 let puzzles = 0;
 for (const s of mission.scenes) {
   const p = s.puzzle;
@@ -83,6 +91,47 @@ for (const s of mission.scenes) {
       if (!opts.has(id)) fail(`hádanka ${p.id}: řešení odkazuje na neznámou volbu "${id}"`);
       else if (opts.get(id).trap) fail(`hádanka ${p.id}: past "${id}" je součástí řešení`);
     });
+  }
+
+  if (p.kind === 'choice') {
+    const right = (p.options || []).filter(o => o.correct === true);
+    if (right.length !== 1) fail(`hádanka ${p.id}: musí mít právě jednu správnou volbu, má ${right.length}`);
+    (p.options || []).forEach(o => {
+      if (o.correct !== true && !o.say) fail(`hádanka ${p.id}: špatná volba "${o.id}" nemá vysvětlení`);
+    });
+  }
+
+  if (p.kind === 'pairs') {
+    const L = new Set((p.left || []).map(o => o.id));
+    const R = new Set((p.right || []).map(o => o.id));
+    const sol = p.solution || {};
+    if (Object.keys(sol).length !== L.size) fail(`hádanka ${p.id}: řešení nepokrývá všechny položky vlevo`);
+    const used = new Set();
+    Object.keys(sol).forEach(k => {
+      if (!L.has(k)) fail(`hádanka ${p.id}: řešení zmiňuje neznámou levou položku "${k}"`);
+      if (!R.has(sol[k])) fail(`hádanka ${p.id}: řešení zmiňuje neznámou pravou položku "${sol[k]}"`);
+      if (used.has(sol[k])) fail(`hádanka ${p.id}: pravá položka "${sol[k]}" je použitá dvakrát`);
+      used.add(sol[k]);
+    });
+  }
+
+  if (p.kind === 'rings') {
+    const start = p.start || [];
+    const size = p.size || (p.symbols || []).length;
+    if (!start.length) fail(`hádanka ${p.id}: chybí výchozí stav`);
+    if (start.every(v => v === 0)) fail(`hádanka ${p.id}: začíná už vyřešená`);
+    // kliknutí otočí kruh i ten hned pod ním; řeší se odvenku dovnitř
+    const st = start.slice();
+    let turns = 0;
+    for (let i = 0; i < st.length; i++) {
+      const need = (size - st[i]) % size;
+      for (let k = 0; k < need; k++) {
+        for (let j = i; j < Math.min(i + 2, st.length); j++) st[j] = (st[j] + 1) % size;
+        turns++;
+      }
+    }
+    if (!st.every(v => v === 0)) fail(`hádanka ${p.id}: nemá řešení!`);
+    else ok(`hádanka ${p.id}: řešitelná (${turns} otočení, odvenku dovnitř)`);
   }
 
   if (p.kind === 'lights') {
@@ -127,6 +176,16 @@ if (!ends.length) fail('mise nemá konec (žádná akce s end:true)');
 else ok(`mise má konec: ${ends.map(s => s.id).join(', ')}`);
 
 ok(`${puzzles} hádanek, ${items.size} předmětů, ${journal.size} zápisů v deníku`);
+}
+
+// projdi všechny zaregistrované mise
+let id = Tiger.firstMissionId();
+while (id) {
+  const m = Tiger.getMission(id);
+  console.log(`\nMise ${m.number}: „${m.title}"  (${m.scenes.length} scén)\n`);
+  checkMission(m);
+  id = Tiger.nextMissionId(id);
+}
 
 console.log(errors ? `\n${errors} chyb\n` : '\nVšechno sedí.\n');
 process.exit(errors ? 1 : 0);

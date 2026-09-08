@@ -16,9 +16,11 @@
   }
 
   var SPEAKERS = {
-    tiger:  'Tiger',
-    bertik: 'Bertík',
-    hlas:   'Hlas'
+    tiger:    'Tiger',
+    bertik:   'Bertík',
+    vilem:    'Vilém',
+    sousedka: 'Sousedka',
+    hlas:     'Hlas'
   };
 
   var UI = {
@@ -311,7 +313,19 @@
         host.appendChild(d);
       });
 
-      $('endNext').textContent = ep.next || 'Pokračování příště.';
+      $('endNext').textContent = payload.next
+        ? (ep.nextTeaser || 'Příběh pokračuje.')
+        : (ep.next || 'Pokračování příště.');
+
+      var btn = $('btnEndNext');
+      if (payload.next) {
+        var nextMission = Tiger.getMission(payload.next);
+        btn.textContent = 'Pokračovat: ' + (nextMission ? nextMission.title : 'další mise');
+        btn.hidden = false;
+      } else {
+        btn.hidden = true;
+      }
+
       this.show('end');
     }
   };

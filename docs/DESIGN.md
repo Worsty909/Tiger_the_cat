@@ -26,6 +26,28 @@ Nitky schválně nechané viset:
 - **Bertíkova otázka.** „Neptej se ho *proč*. Zeptej se ho, *jak dlouho už to
   dělá*." — naznačuje, že Tiger není první.
 
+### Co odhalila mise 2
+
+- **Čtyři jména, sedmnáct let.** TIGER (2009), BARON (2015), TYGŘÍK (2020),
+  MIKEŠ (2026). Jedna fotka na všech plakátech. Tiger nestárne — a je to teď
+  řečeno nahlas, ne jen naznačeno.
+- **Elena Marešová** je „E." Hledala ho sedmnáct let a umřela rok předtím, než
+  ji našel. Tohle se nesmí odestát ani vylepšit; je to cena, kterou příběh platí.
+- **Známka z obojku:** „TIGER / Kovářská 9 / domov". Existuje dvakrát, protože
+  Elena nechala vyrýt druhou.
+- **Vilém** doručuje zprávu, jejíž adresát dávno neexistuje. Je to Tigerovo
+  zrcadlo: obě postavy dělají totéž, jen jedna si to přiznává.
+- **Holčička v okně** vypadá přesně jako Elena na fotce z roku 2009 a drží
+  červený obojek. Zná Tigerovo jméno. Tohle je hlavní otázka mise 3.
+
+### Nitky pro misi 3
+
+- Kdo je ta holčička a proč je to Elena?
+- Co bylo ve Vilémově pouzdře — a pro koho?
+- Kdo Tigera odnesl do sklepa a proč zrovna teď?
+- Tiger si nepamatuje nic před dodávkou. Ta ztráta paměti je záměrná, ne
+  vypravěčská zkratka.
+
 **Tón:** vtipné a hluboké se musí střídat, ne mísit. Scéna je buď komická,
 nebo srdcervoucí. Když je obojí najednou, není ani jedno.
 

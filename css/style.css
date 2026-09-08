@@ -402,3 +402,57 @@ body::after{ /* jemné zrno */
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;transition-duration:.01ms !important}
 }
+
+/* --- spojovačka (pairs) --- */
+.pairs{display:flex;gap:14px;justify-content:center;align-items:flex-start}
+.pairs-col{display:flex;flex-direction:column;gap:9px;flex:1;max-width:230px}
+.pair-btn{
+  background:rgba(255,255,255,.04);border:1px solid var(--line-soft);color:var(--cream);
+  border-radius:12px;padding:13px 14px;cursor:pointer;font:600 15px var(--font-ui);
+  transition:all .16s ease;text-align:center;width:100%
+}
+.pair-btn small{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:3px}
+.pair-btn:hover:not(:disabled){border-color:var(--amber);background:rgba(240,180,41,.10)}
+.pair-btn.is-picked{
+  border-color:var(--amber);background:rgba(240,180,41,.18);
+  box-shadow:0 0 0 3px rgba(240,180,41,.15)
+}
+.pair-btn.is-matched{
+  border-color:rgba(143,214,148,.5);background:rgba(143,214,148,.10);
+  color:var(--moss);opacity:.85;cursor:default
+}
+.pair-btn:disabled{cursor:default}
+
+/* --- kruhový zámek (rings) --- */
+.rings{
+  position:relative;width:180px;height:180px;margin:6px auto 10px;
+  display:grid;place-items:center
+}
+.ring{
+  position:absolute;border-radius:50%;cursor:pointer;
+  background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.05),transparent 70%),#22323d;
+  border:2px solid #3d525f;display:grid;place-items:center;
+  transition:border-color .2s ease, box-shadow .25s ease, transform .25s ease
+}
+.ring:hover{border-color:var(--amber);transform:rotate(-4deg)}
+.ring.is-set{
+  border-color:var(--amber-soft);
+  box-shadow:0 0 18px rgba(240,180,41,.35),inset 0 0 14px rgba(240,180,41,.14)
+}
+.ring-sym{
+  position:absolute;top:6px;font-size:15px;line-height:1;color:var(--cream-dim);
+  transition:color .2s ease
+}
+.ring.is-set .ring-sym{color:var(--amber)}
+
+@media (max-width:560px){
+  .pairs{gap:10px}
+  .pair-btn{padding:11px 10px;font-size:14px}
+  .rings{width:156px;height:156px}
+}
+
+/* --- další mluvčí (mise 2) --- */
+.line-vilem .say-who{color:#9ec5e8}
+.line-vilem .say-text{color:#d6e7f5}
+.line-sousedka .say-who{color:#e0b0d0}
+.line-sousedka .say-text{color:#f0dcea}

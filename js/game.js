@@ -130,6 +130,9 @@
   });
 
   /* ---------- konec mise ---------- */
+  $('btnEndNext').addEventListener('click', function () {
+    if (!Game.advance()) { refreshTitle(); UI.show('title'); }
+  });
   $('btnEndJournal').addEventListener('click', function () { UI.openJournal(); });
   $('btnEndMenu').addEventListener('click', function () {
     refreshTitle();

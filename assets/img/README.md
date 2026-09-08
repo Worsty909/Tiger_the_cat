@@ -26,6 +26,21 @@ Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál
 | `ulice` | plakát v dešti |
 | `tiger-ref` | referenční portrét Tigera (v misi se nezobrazuje) |
 
+### Mise 2 — Ulice, které si pamatují
+
+| Klíč | Kde se objeví |
+|------|---------------|
+| `m2-ulice-dest` | odchod od plakátu do deště |
+| `m2-sloup` | sloup s vrstvami starých plakátů |
+| `m2-plakaty` | čtyři plakáty seřazené podle stáří |
+| `m2-vilem` | holub Vilém na zábradlí |
+| `m2-archiv` | Vilémovo hnízdo z natrhaných plakátů |
+| `m2-budka` | telefonní budka a záznamník |
+| `m2-dvur` | dvůr s kovanou mříží a kruhovým zámkem |
+| `m2-zvonky` | panel se jmenovkami a schránkami |
+| `m2-chodba` | schodiště, schránka číslo 6, dopis |
+| `m2-okno` | holčička v okně za svítání |
+
 ## Doporučení
 
 Šířka kolem 900 px bohatě stačí — hra obrázek zobrazuje maximálně v 860 px

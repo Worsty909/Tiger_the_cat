@@ -173,6 +173,24 @@
     countAttempt: function () { this.state.attempts++; this.save(); },
     countHint: function () { this.state.hintsUsed++; this.save(); },
 
+    /* --- přechod na další misi ---
+       Deník a odemčené vzpomínky si hráč nese dál; předměty a příznaky
+       zůstávají v misi, ve které je nasbíral. */
+    advance: function () {
+      var nextId = nextMissionId(this.state.missionId);
+      if (!nextId) return false;
+      var carriedJournal = this.state.journal.slice();
+      var startedAt = this.state.startedAt;
+      this.state = freshState(nextId);
+      this.state.journal = carriedJournal;
+      this.state.startedAt = startedAt;
+      this.mission = getMission(nextId);
+      this.save();
+      this.emit('start', this.state);
+      this.goto(this.mission.start);
+      return true;
+    },
+
     /* --- konec mise --- */
     finish: function () {
       this.state.finished = true;

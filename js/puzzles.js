@@ -255,13 +255,150 @@
           b.appendChild(s);
         }
         b.addEventListener('click', function () {
-          if (o.correct === false) { api.fail(o.say || 'Ne. Tohle není ono.'); return; }
+          // Správná volba se musí označit výslovně. Kdyby stačilo „není false",
+          // opomenutý příznak v datech mise by z chybné volby udělal správnou.
+          if (o.correct !== true) { api.fail(o.say || 'Ne. Tohle není ono.'); return; }
           if (o.set) api.game.setFlags(o.set);
           api.solve({ choice: o.id });
         });
         board.appendChild(b);
       });
       host.appendChild(board);
+    }
+  });
+
+  /* ---------------------------------------------------------
+     5) PAIRS — spojovačka. Klikni vlevo, pak vpravo.
+     puzzle: {
+       kind:'pairs',
+       left:[{id,label,note}], right:[{id,label}],
+       solution:{ levyId: 'pravyId', ... }
+     }
+     --------------------------------------------------------- */
+  register('pairs', {
+    render: function (host, p, api) {
+      var solution = p.solution || {};
+      var matched = {};
+      var picked = null;
+
+      var board = el('div', 'pairs');
+      var colL = el('div', 'pairs-col');
+      var colR = el('div', 'pairs-col');
+      board.appendChild(colL);
+      board.appendChild(colR);
+      host.appendChild(board);
+
+      function done() { return Object.keys(matched).length === Object.keys(solution).length; }
+
+      function draw() {
+        colL.innerHTML = '';
+        colR.innerHTML = '';
+
+        (p.left || []).forEach(function (o) {
+          var b = el('button', 'pair-btn');
+          b.appendChild(document.createTextNode(o.label));
+          if (o.note) {
+            var s = document.createElement('small');
+            s.textContent = o.note;
+            b.appendChild(s);
+          }
+          if (matched[o.id]) b.classList.add('is-matched');
+          else if (picked === o.id) b.classList.add('is-picked');
+          b.disabled = !!matched[o.id];
+          b.addEventListener('click', function () {
+            picked = (picked === o.id) ? null : o.id;
+            draw();
+          });
+          colL.appendChild(b);
+        });
+
+        (p.right || []).forEach(function (o) {
+          var takenBy = null;
+          Object.keys(matched).forEach(function (k) { if (matched[k] === o.id) takenBy = k; });
+
+          var b = el('button', 'pair-btn');
+          b.appendChild(document.createTextNode(o.label));
+          if (takenBy) b.classList.add('is-matched');
+          b.disabled = !!takenBy;
+          b.addEventListener('click', function () {
+            if (!picked) { api.say(p.pickFirst || 'Nejdřív vyber vlevo.', 'hint'); return; }
+            if (solution[picked] === o.id) {
+              matched[picked] = o.id;
+              picked = null;
+              draw();
+              if (done()) setTimeout(function () { api.solve(); }, 420);
+              else api.say(p.stepOk || 'Sedí.', 'good');
+            } else {
+              picked = null;
+              draw();
+              api.fail(p.wrongPair || 'Tahle dvojice k sobě nepatří.');
+            }
+          });
+          colR.appendChild(b);
+        });
+      }
+
+      draw();
+    }
+  });
+
+  /* ---------------------------------------------------------
+     6) RINGS — soustředné kruhy. Kliknutí otočí kruh i ten pod ním,
+        takže záleží na pořadí: nejdřív vnější, pak dovnitř.
+     puzzle: { kind:'rings', symbols:[...], start:[1,3,1], size:4 }
+     Kliknutí na kruh otočí jeho i ten hned pod ním. Vnitřní kruh se otáčí
+     sám, takže se hlavolam řeší odvenku dovnitř.
+     Cíl: všechny kruhy na symbolu s indexem 0.
+     --------------------------------------------------------- */
+  register('rings', {
+    render: function (host, p, api) {
+      var symbols = p.symbols || ['\u25CF', '\u25B2', '\u25A0', '\u25C6'];
+      var size = p.size || symbols.length;
+      var state = (p.start || [1, 3, 1]).slice();
+      var turns = 0;
+
+      var wrap = el('div', 'rings');
+      var tools = el('div', 'puzzle-tools');
+      var meta = el('div', 'puzzle-meta');
+      var reset = el('button', 'link-btn', 'Vrátit kruhy zpátky');
+
+      function draw() {
+        wrap.innerHTML = '';
+        state.forEach(function (v, i) {
+          var b = el('button', 'ring' + (v === 0 ? ' is-set' : ''));
+          // Poměrem, ne pixely — jinak by vnější kruh přetekl na mobilu.
+          b.style.width = b.style.height = (100 - i * 28) + '%';
+          b.appendChild(el('span', 'ring-sym', symbols[v % symbols.length]));
+          b.setAttribute('aria-label', 'Kruh ' + (i + 1));
+          b.addEventListener('click', function () { turn(i); });
+          wrap.appendChild(b);
+        });
+        meta.textContent = 'Otočeno: ' + turns + '\u00D7';
+      }
+
+      function turn(i) {
+        // Kruh otočí sám sebe a kruh hned pod sebou. Vnitřní kruh už nemá
+        // co táhnout, takže se řeší odshora dolů: nejdřív vnější, pak dovnitř.
+        for (var j = i; j < Math.min(i + 2, state.length); j++) {
+          state[j] = (state[j] + 1) % size;
+        }
+        turns++;
+        draw();
+        if (state.every(function (v) { return v === 0; })) {
+          setTimeout(function () { api.solve({ turns: turns }); }, 420);
+        }
+      }
+
+      reset.addEventListener('click', function () {
+        state = (p.start || []).slice(); turns = 0; draw();
+        api.say('Kruhy jsou zpátky tam, kde byly.', 'hint');
+      });
+
+      host.appendChild(wrap);
+      tools.appendChild(reset);
+      tools.appendChild(meta);
+      host.appendChild(tools);
+      draw();
     }
   });
 

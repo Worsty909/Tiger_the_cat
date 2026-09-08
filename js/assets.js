@@ -30,7 +30,19 @@
     'bedny-okno':   'hf_20260908_181245_b18fbcc1-5618-4a48-b86d-0e33e7408687.png',
     'ulice':        'hf_20260908_181244_6723aa49-72da-4eb1-819f-57d5ed1b87d2.png',
     // referenční portrét hlavního hrdiny — pro další mise a materiály
-    'tiger-ref':    'hf_20260908_180529_0aaa8f78-d892-499d-9489-fa2ad192259d.png'
+    'tiger-ref':    'hf_20260908_180529_0aaa8f78-d892-499d-9489-fa2ad192259d.png',
+
+    // mise 2
+    'm2-ulice-dest': 'hf_20260908_203207_357f5f9b-8353-4eb3-86e7-2ac35eab7ee6.png',
+    'm2-sloup':      'hf_20260908_203207_675fb3b1-4588-49bf-be86-462424c0d03e.png',
+    'm2-plakaty':    'hf_20260908_203207_e7cef5a8-638d-40b5-9ac0-f858ba084c00.png',
+    'm2-vilem':      'hf_20260908_203207_5bf3bcae-30be-4600-8f9b-8c8ddf91db69.png',
+    'm2-archiv':     'hf_20260908_203207_242c5da7-bda7-40b0-a0cb-f83bd5275038.png',
+    'm2-budka':      'hf_20260908_203207_5e91f6ff-994f-478e-8eaf-9ea90902fda7.png',
+    'm2-dvur':       'hf_20260908_203208_a1dd3d10-17e5-4a58-9b15-77f75b5ac42e.png',
+    'm2-zvonky':     'hf_20260908_203207_8c095418-c1d1-42ee-85a8-a6731307520d.png',
+    'm2-chodba':     'hf_20260908_203207_b6ceda17-e459-4d86-afca-63bb8b82e98b.png',
+    'm2-okno':       'hf_20260908_203207_0ac35f0a-c32a-4ebb-814d-ac5da4d52510.png'
   };
 
   // Lokální soubor může mít libovolnou z běžných přípon — ať se dá obrázek

@@ -7,8 +7,15 @@ a hledá cestu domů. Ovládá se **jenom klikáním a psaním odpovědí** — 
 > Tiger si pamatoval tři věci. Vůni pečeného kuřete. Otevřená dvířka dodávky.
 > A pocit, že je to vynikající nápad.
 
-**Mise 1 — „Kdo zhasl slunce"** je hotová a hratelná: 15 scén, 5 hádanek,
-komedie, jeden opravdu nepříjemný nález a zvrat na konci.
+**Mise 1 — „Kdo zhasl slunce"** (15 scén, 5 hádanek): únik ze sklepa, komedie
+s myší v helmě, jeden opravdu nepříjemný nález a zvrat na konci.
+
+**Mise 2 — „Ulice, které si pamatují"** (14 scén, 5 hádanek): noční město,
+plakáty starší, než by měly být, poštovní holub bez adresáta a konec, který
+otevírá víc otázek, než zavírá.
+
+Mise na sebe navazují — po dohrání jedničky se dá plynule pokračovat a deník
+si hráč nese s sebou.
 
 ## Kde si zahrát
 
