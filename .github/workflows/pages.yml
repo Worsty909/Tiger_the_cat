@@ -1,0 +1,40 @@
+# Nasazení hry na GitHub Pages.
+# Stránka je statická (žádný build), takže se obsah repozitáře nahraje tak, jak je.
+name: Deploy na GitHub Pages
+
+on:
+  push:
+    branches: [claude/escape-game-tiger-y49gi5]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Běží vždy jen jedno nasazení; rozdělané se nechá doběhnout.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement: true zapne Pages i v repozitáři, kde ještě nejsou zapnuté.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # Kořen repozitáře je rovnou kořen webu. .git a .github se vynechávají samy.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
