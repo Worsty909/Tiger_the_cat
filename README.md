@@ -10,7 +10,14 @@ a hledá cestu domů. Ovládá se **jenom klikáním a psaním odpovědí** — 
 **Mise 1 — „Kdo zhasl slunce"** je hotová a hratelná: 15 scén, 5 hádanek,
 komedie, jeden opravdu nepříjemný nález a zvrat na konci.
 
-## Jak to spustit
+## Kde si zahrát
+
+**<https://worsty909.github.io/Tiger_the_cat/>**
+
+Nasazuje se automaticky při každém pushi do výchozí větve
+(`.github/workflows/pages.yml`).
+
+## Jak to spustit lokálně
 
 Otevři `index.html` v prohlížeči. To je všechno — žádný build, žádné závislosti,
 čisté HTML/CSS/JS.
