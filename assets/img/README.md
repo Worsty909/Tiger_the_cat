@@ -1,6 +1,6 @@
 # Obrázky
 
-Všech 11 obrázků tu už je, jako `webp` o šířce 900 px (titulka 1200 px).
+Všech 31 obrázků tu už je, jako `webp` o šířce 900 px (titulka 1200 px).
 
 Hra hledá pro každou scénu soubor `<klíč>.<přípona>` v této složce. Zkouší
 `avif`, `webp`, `png`, `jpg`, `jpeg` — v tomhle pořadí. Když chceš některý
