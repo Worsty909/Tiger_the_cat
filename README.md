@@ -14,6 +14,10 @@ s myší v helmě, jeden opravdu nepříjemný nález a zvrat na konci.
 plakáty starší, než by měly být, poštovní holub bez adresáta a konec, který
 otevírá víc otázek, než zavírá.
 
+**Mise 3 — „Co si pamatuje kocour"** (15 scén, 5 hádanek): odpovědi. Kdo je ta
+holčička, proč Tiger nestárne, co bylo v holubím pouzdře — a dva různé konce
+podle toho, jak se hráč rozhodne.
+
 Mise na sebe navazují — po dohrání jedničky se dá plynule pokračovat a deník
 si hráč nese s sebou.
 

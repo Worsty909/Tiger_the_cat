@@ -59,7 +59,7 @@ for (const s of mission.scenes) {
 }
 
 // 3) hádanky dávají smysl
-const kinds = new Set(['input', 'lights', 'sequence', 'choice', 'pairs', 'rings']);
+const kinds = new Set(['input', 'lights', 'sequence', 'choice', 'pairs', 'rings', 'recall']);
 let puzzles = 0;
 for (const s of mission.scenes) {
   const p = s.puzzle;
@@ -98,6 +98,20 @@ for (const s of mission.scenes) {
     if (right.length !== 1) fail(`hádanka ${p.id}: musí mít právě jednu správnou volbu, má ${right.length}`);
     (p.options || []).forEach(o => {
       if (o.correct !== true && !o.say) fail(`hádanka ${p.id}: špatná volba "${o.id}" nemá vysvětlení`);
+    });
+  }
+
+  if (p.kind === 'recall') {
+    const qs = p.questions || [];
+    if (!qs.length) fail(`hádanka ${p.id}: žádné otázky`);
+    qs.forEach((q, i) => {
+      const n = (q.options || []).length;
+      if (n < 2) fail(`hádanka ${p.id}: otázka ${i + 1} má míň než dvě možnosti`);
+      if (!Number.isInteger(q.answer) || q.answer < 0 || q.answer >= n) {
+        fail(`hádanka ${p.id}: otázka ${i + 1} má neplatný index správné odpovědi`);
+      }
+      if (!q.say) fail(`hádanka ${p.id}: otázka ${i + 1} nemá reakci na špatnou odpověď`);
+      if (new Set(q.options).size !== n) fail(`hádanka ${p.id}: otázka ${i + 1} má duplicitní možnosti`);
     });
   }
 

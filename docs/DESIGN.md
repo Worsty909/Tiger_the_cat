@@ -40,7 +40,34 @@ Nitky schválně nechané viset:
 - **Holčička v okně** vypadá přesně jako Elena na fotce z roku 2009 a drží
   červený obojek. Zná Tigerovo jméno. Tohle je hlavní otázka mise 3.
 
-### Nitky pro misi 3
+### Co odhalila mise 3 (odpovědi)
+
+- **Tiger nestárne, protože zapomíná.** Když ztratí člověka, ztratí s ním
+  úplně všechno ostatní a začíná od nuly. Proto nikdy nedojde tak daleko, aby
+  zestárnul. Je to jediná nemožná věc v jinak obyčejném světě — víc jich do
+  příběhu nepatří.
+- **Tři generace, jeden obličej.** Elena (1961, 8 let) → Klára (2009, 7 let)
+  → Ema (2026, 7 let). Tím se vysvětluje holčička v okně: není to Elena, je to
+  její pravnučka. Elena umřela jako stařenka, takže tou holčičkou z roku 2009
+  být nemohla — to byla Klára.
+- **Elena ho potkala jako dítě v roce 1961.** Její hledání nebyla starost o
+  vnuččinu kočku, ale o kocoura z vlastního dětství.
+- **Kdo ho zavřel do sklepa: nikdo.** Skočil si do dodávky sám. Bedna, kód 415
+  a sardinky byly Elenina skrýš, jedna ze čtyřiceti. Tigerova domněnka
+  z konce mise 1 byla mylná — příběh není spiknutí, ale ztráta.
+- **Vilémovo pouzdro** obsahovalo Elenin vzkaz adresovaný Tigerovi. Doručeno
+  po sedmnácti letech.
+- **Dva konce.** Zůstat (Ema si to bude pamatovat za něj) nebo odejít dřív, než
+  ji stihne zapomenout. Ani jeden není ten „správný"; příznak `zustal` je
+  uložený pro pokračování.
+
+### Nitky pro misi 4
+
+- Co se stane, až Ema vyroste a Tiger zapomene i ji?
+- Funguje vůbec „pamatovat si to za někoho"? Zatím to nikdo nezkusil.
+- Bertík má jednu vzpomínku, na které mu záleží. Tiger nemá žádnou.
+
+### Nitky pro misi 3 (vyřešeno)
 
 - Kdo je ta holčička a proč je to Elena?
 - Co bylo ve Vilémově pouzdře — a pro koho?

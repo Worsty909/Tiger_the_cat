@@ -456,3 +456,19 @@ body::after{ /* jemné zrno */
 .line-vilem .say-text{color:#d6e7f5}
 .line-sousedka .say-who{color:#e0b0d0}
 .line-sousedka .say-text{color:#f0dcea}
+
+/* --- vzpomínání (recall) --- */
+.recall-count{
+  font:600 11px/1 var(--font-ui);letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;text-align:center
+}
+.recall-q{
+  font-family:var(--font-story);font-size:18px;line-height:1.55;color:var(--cream);
+  text-align:center;margin-bottom:18px;max-width:38ch;margin-left:auto;margin-right:auto
+}
+
+/* --- mluvčí (mise 3) --- */
+.line-klara .say-who{color:#c9b6e8}
+.line-klara .say-text{color:#e6dcf5}
+.line-ema .say-who{color:#f5c2a0}
+.line-ema .say-text{color:#fbe4d4}

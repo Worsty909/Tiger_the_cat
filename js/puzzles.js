@@ -402,6 +402,60 @@
     }
   });
 
+  /* ---------------------------------------------------------
+     7) RECALL — vzpomínání. Otázky na to, co se stalo dřív ve hře.
+        Ptá se postava, odpovídá hráč. Postupuje se po jedné otázce.
+     puzzle: {
+       kind:'recall',
+       questions:[{ q:'…', options:['a','b','c'], answer:1, say:'…' }]
+     }
+     --------------------------------------------------------- */
+  register('recall', {
+    render: function (host, p, api) {
+      var qs = p.questions || [];
+      var at = 0;
+
+      var counter = el('div', 'recall-count');
+      var question = el('div', 'recall-q');
+      var board = el('div', 'seq-options');
+      host.appendChild(counter);
+      host.appendChild(question);
+      host.appendChild(board);
+
+      function draw() {
+        var cur = qs[at];
+        counter.textContent = 'Otázka ' + (at + 1) + ' z ' + qs.length;
+        question.textContent = cur.q;
+        board.innerHTML = '';
+        cur.options.forEach(function (label, i) {
+          var b = el('button', 'seq-btn', label);
+          b.addEventListener('click', function () { answer(i); });
+          board.appendChild(b);
+        });
+      }
+
+      function answer(i) {
+        var cur = qs[at];
+        if (i !== cur.answer) {
+          api.fail(cur.say || 'To nebylo ono.');
+          return;
+        }
+        at++;
+        if (at >= qs.length) {
+          board.innerHTML = '';
+          counter.textContent = '';
+          question.textContent = '';
+          api.solve();
+          return;
+        }
+        api.say(p.stepOk || 'Přesně tak.', 'good');
+        draw();
+      }
+
+      draw();
+    }
+  });
+
   global.Tiger = global.Tiger || {};
   global.Tiger.Puzzles = { register: register, get: get };
 

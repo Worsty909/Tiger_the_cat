@@ -41,6 +41,21 @@ Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál
 | `m2-chodba` | schodiště, schránka číslo 6, dopis |
 | `m2-okno` | holčička v okně za svítání |
 
+### Mise 3 — Co si pamatuje kocour
+
+| Klíč | Kde se objeví |
+|------|---------------|
+| `m3-prah` | dveře se za svítání otevřou |
+| `m3-ema` | Ema si klekne a nabídne obojek |
+| `m3-krabice` | Elenina krabice: sedmnáct let hledání |
+| `m3-mapa` | ručně kreslená mapa sklepů |
+| `m3-vilem` | Vilém konečně doručuje |
+| `m3-zprava` | rozvinutý proužek z pouzdra |
+| `m3-album` | staré album s mosaznou sponou |
+| `m3-1961` | fotka z roku 1961 — Elena jako dítě |
+| `m3-sklep-den` | sklep za denního světla, s Bertíkem |
+| `m3-konec` | parapet na slunci (oba konce) |
+
 ## Doporučení
 
 Šířka kolem 900 px bohatě stačí — hra obrázek zobrazuje maximálně v 860 px

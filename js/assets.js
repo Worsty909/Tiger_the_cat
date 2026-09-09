@@ -42,7 +42,19 @@
     'm2-dvur':       'hf_20260908_203208_a1dd3d10-17e5-4a58-9b15-77f75b5ac42e.png',
     'm2-zvonky':     'hf_20260908_203207_8c095418-c1d1-42ee-85a8-a6731307520d.png',
     'm2-chodba':     'hf_20260908_203207_b6ceda17-e459-4d86-afca-63bb8b82e98b.png',
-    'm2-okno':       'hf_20260908_203207_0ac35f0a-c32a-4ebb-814d-ac5da4d52510.png'
+    'm2-okno':       'hf_20260908_203207_0ac35f0a-c32a-4ebb-814d-ac5da4d52510.png',
+
+    // mise 3
+    'm3-prah':        'hf_20260909_065418_372bd26f-1ab5-4d0d-a8a2-6fd453b53dbf.png',
+    'm3-ema':         'hf_20260909_065418_47bc6310-429e-4ce4-ad22-4a800871ba39.png',
+    'm3-krabice':     'hf_20260909_065418_a3048921-ee15-4a8c-8f83-5409d364f32a.png',
+    'm3-mapa':        'hf_20260909_065418_79df79f8-1fd7-41dd-a8aa-0ff9c3fd52ff.png',
+    'm3-vilem':       'hf_20260909_065418_2ed51be7-2a7f-44aa-9dfb-6b964706ccbb.png',
+    'm3-zprava':      'hf_20260909_065418_7555bb19-d078-4c18-b7b9-fe15984e26fe.png',
+    'm3-album':       'hf_20260909_065418_b2f26686-78f6-49dc-bf68-0be833ec37a6.png',
+    'm3-1961':        'hf_20260909_065418_98544fb3-21f7-4090-a203-2640f0c6de8c.png',
+    'm3-sklep-den':   'hf_20260909_065418_085996aa-5ebd-49fc-8ee8-6023454ed4e8.png',
+    'm3-konec':       'hf_20260909_065418_d32a25ce-cf42-45fb-b534-88e6ba4a2f0c.png'
   };
 
   // Lokální soubor může mít libovolnou z běžných přípon — ať se dá obrázek

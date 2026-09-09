@@ -20,6 +20,8 @@
     bertik:   'Bertík',
     vilem:    'Vilém',
     sousedka: 'Sousedka',
+    klara:    'Klára',
+    ema:      'Ema',
     hlas:     'Hlas'
   };
 
