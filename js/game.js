@@ -18,6 +18,7 @@
   /* ---------- titulní obrazovka ---------- */
   function refreshTitle() {
     $('btnContinue').hidden = !Game.hasSave();
+    renderChapters();
 
     // Pozadí titulky: první zdroj, který se opravdu načte.
     var art = $('titleArt');
@@ -29,6 +30,64 @@
       probe.onerror = function () { tryNext(i + 1); };
       probe.src = list[i];
     })(0);
+  }
+
+  /* ---------- výběr kapitol ----------
+     Kapitola se odemyká dohráním té předchozí, aby si hráč nemohl
+     omylem odkliknout rozuzlení dřív, než na něj příběh dojde. */
+  function renderChapters() {
+    var host = $('chapterList');
+    host.innerHTML = '';
+
+    var saved = Game.load();
+    global.Tiger.missionIds().forEach(function (id) {
+      var m = global.Tiger.getMission(id);
+      if (!m) return;
+
+      var unlocked = Game.isUnlocked(id);
+      var done = Game.isCompleted(id);
+      var current = !!(saved && !saved.finished && saved.missionId === id);
+
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'chapter-card' +
+        (unlocked ? '' : ' is-locked') +
+        (done ? ' is-done' : '') +
+        (current ? ' is-current' : '');
+      card.disabled = !unlocked;
+
+      card.appendChild(span('chapter-num', unlocked ? String(m.number) : '\uD83D\uDD12'));
+
+      var body = span('chapter-body');
+      body.appendChild(span('chapter-title', unlocked ? m.title : 'Zatím zamčeno'));
+      body.appendChild(span('chapter-state',
+        !unlocked ? 'Dohraj předchozí kapitolu'
+          : current ? 'Rozehráno'
+          : done ? 'Dohráno'
+          : 'Nezačato'));
+      card.appendChild(body);
+
+      if (unlocked) {
+        card.addEventListener('click', function () { openChapter(id, current); });
+      }
+      host.appendChild(card);
+    });
+  }
+
+  function span(cls, text) {
+    var n = document.createElement('span');
+    n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  // U rozehrané kapitoly navazujeme; u ostatních začínáme od začátku,
+  // což přepíše uloženou pozici — proto se ptáme.
+  function openChapter(id, current) {
+    if (current && Game.resume()) return;
+    if (Game.hasSave() && !confirm('Tohle smaže rozehranou hru. Začít kapitolu od začátku?')) return;
+    Game.wipe();
+    Game.start(id);
   }
 
   $('btnNewGame').addEventListener('click', function () {

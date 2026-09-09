@@ -86,8 +86,43 @@ body::after{ /* jemné zrno */
   margin:26px auto 0;max-width:44ch;color:var(--cream-dim);line-height:1.7;font-size:15px
 }
 .title-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
-.title-episode{margin-top:28px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.amber{color:var(--amber)}
+
+/* ---------------- VÝBĚR KAPITOL ---------------- */
+.chapters{margin:32px auto 0;max-width:420px}
+.chapters-label{
+  margin:0 0 12px;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)
+}
+.chapter-list{display:flex;flex-direction:column;gap:8px;text-align:left}
+.chapter-card{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:12px 16px;border-radius:var(--radius-sm);
+  background:rgba(24,42,53,.55);border:1px solid var(--line-soft);
+  color:var(--cream);font:inherit;text-align:left;cursor:pointer;
+  transition:transform .12s ease, border-color .2s ease, background .2s ease;
+}
+.chapter-card:hover:not(:disabled){border-color:var(--amber);background:rgba(31,53,66,.8)}
+.chapter-card:active:not(:disabled){transform:translateY(1px)}
+.chapter-card:disabled{cursor:not-allowed;opacity:.55}
+.chapter-num{
+  flex:none;width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;
+  font:700 15px/1 var(--font-ui);color:var(--amber);
+  background:rgba(240,180,41,.10);border:1px solid var(--line)
+}
+.is-locked .chapter-num{
+  font-size:13px;color:var(--muted);background:transparent;border-color:var(--line-soft)
+}
+.chapter-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+.chapter-title{
+  font-family:var(--font-story);font-size:17px;line-height:1.2;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.is-locked .chapter-title{font-style:italic;color:var(--cream-dim)}
+.chapter-state{
+  font:600 10px/1 var(--font-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)
+}
+.is-done .chapter-state{color:var(--moss)}
+.is-current .chapter-state{color:var(--amber)}
 
 /* ---------------- TLAČÍTKA ---------------- */
 .btn{
@@ -446,6 +481,9 @@ body::after{ /* jemné zrno */
 .ring.is-set .ring-sym{color:var(--amber)}
 
 @media (max-width:560px){
+  .chapters{margin-top:24px}
+  .chapter-card{padding:10px 12px;gap:11px}
+  .chapter-title{font-size:15px}
   .pairs{gap:10px}
   .pair-btn{padding:11px 10px;font-size:14px}
   .rings{width:156px;height:156px}

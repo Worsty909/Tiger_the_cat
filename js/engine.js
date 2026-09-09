@@ -10,6 +10,8 @@
   'use strict';
 
   var SAVE_KEY = 'tiger.save.v1';
+  // Vlastní klíč: „Nová hra" smaže rozehranou pozici, ale ne odemčené kapitoly.
+  var PROGRESS_KEY = 'tiger.progress.v1';
 
   /* ---------- pomocné funkce ---------- */
 
@@ -194,12 +196,37 @@
     /* --- konec mise --- */
     finish: function () {
       this.state.finished = true;
+      this.markCompleted(this.state.missionId);
       this.save();
       this.emit('finish', {
         mission: this.mission,
         state: this.state,
         next: nextMissionId(this.state.missionId)
       });
+    },
+
+    /* --- dohrané kapitoly ---
+       Drží se mimo uloženou pozici, aby výběr kapitol přežil novou hru. */
+    completed: function () {
+      try {
+        var data = JSON.parse(localStorage.getItem(PROGRESS_KEY));
+        return (data && Array.isArray(data.done)) ? data.done : [];
+      } catch (e) { return []; }
+    },
+    isCompleted: function (id) { return this.completed().indexOf(id) > -1; },
+    markCompleted: function (id) {
+      var done = this.completed();
+      if (done.indexOf(id) > -1) return;
+      done.push(id);
+      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify({ version: 1, done: done })); }
+      catch (e) { /* privátní režim — kapitola prostě zůstane zamčená */ }
+    },
+
+    // Odemčená je první kapitola, každá dohraná a ta hned po dohrané.
+    isUnlocked: function (id) {
+      if (id === firstMissionId() || this.isCompleted(id)) return true;
+      var i = missionOrder.indexOf(id);
+      return i > 0 && this.isCompleted(missionOrder[i - 1]);
     },
 
     /* --- ukládání --- */
@@ -239,6 +266,7 @@
     getMission: getMission,
     firstMissionId: firstMissionId,
     nextMissionId: nextMissionId,
+    missionIds: function () { return missionOrder.slice(); },
     normalize: normalize,
     clone: clone,
     SAVE_KEY: SAVE_KEY

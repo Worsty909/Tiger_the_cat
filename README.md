@@ -48,6 +48,7 @@ bez grafiky.
 - **Deník vzpomínek** — sbírá se během hraní a je to hlavní nosič příběhu do dalších dílů
 - **Inventář** a příznaky, na kterých se dají větvit scény
 - **Automatické ukládání** do `localStorage`, zavřít okno je bezpečné
+- **Výběr kapitol** na titulce — kapitola se odemyká dohráním té předchozí
 - **Hra se nedá pokazit** tak, aby nešla dohrát
 
 ## Hádanky v misi 1
