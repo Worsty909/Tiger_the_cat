@@ -59,7 +59,7 @@ for (const s of mission.scenes) {
 }
 
 // 3) hádanky dávají smysl
-const kinds = new Set(['input', 'lights', 'sequence', 'choice', 'pairs', 'rings', 'recall']);
+const kinds = new Set(['input', 'lights', 'sequence', 'choice', 'pairs', 'rings', 'recall', 'dial']);
 let puzzles = 0;
 for (const s of mission.scenes) {
   const p = s.puzzle;
@@ -113,6 +113,26 @@ for (const s of mission.scenes) {
       if (!q.say) fail(`hádanka ${p.id}: otázka ${i + 1} nemá reakci na špatnou odpověď`);
       if (new Set(q.options).size !== n) fail(`hádanka ${p.id}: otázka ${i + 1} má duplicitní možnosti`);
     });
+  }
+
+  if (p.kind === 'dial') {
+    const wheels = p.wheels || [];
+    if (!wheels.length) fail(`hádanka ${p.id}: žádná kolečka`);
+    wheels.forEach((w, i) => {
+      const n = (w.options || []).length;
+      if (n < 2) fail(`hádanka ${p.id}: kolečko ${i + 1} má míň než dvě slova`);
+      if (new Set(w.options).size !== n) fail(`hádanka ${p.id}: kolečko ${i + 1} má slovo dvakrát`);
+      if (!Number.isInteger(w.answer) || w.answer < 0 || w.answer >= n) {
+        fail(`hádanka ${p.id}: kolečko ${i + 1} má neplatný index řešení`);
+      }
+      const start = w.start || 0;
+      if (!Number.isInteger(start) || start < 0 || start >= n) {
+        fail(`hádanka ${p.id}: kolečko ${i + 1} má neplatnou výchozí pozici`);
+      }
+    });
+    if (wheels.length && wheels.every(w => (w.start || 0) === w.answer)) {
+      fail(`hádanka ${p.id}: zadání je rovnou vyřešené`);
+    }
   }
 
   if (p.kind === 'pairs') {

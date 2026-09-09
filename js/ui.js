@@ -22,6 +22,7 @@
     sousedka: 'Sousedka',
     klara:    'Klára',
     ema:      'Ema',
+    bruno:    'Bruno',
     hlas:     'Hlas'
   };
 
@@ -143,6 +144,7 @@
         var b = el('button', 'action', a.label);
         b.addEventListener('click', function () {
           if (a.set) Game.setFlags(a.set);
+          if (a.remember) Game.remember(a.remember);
           if (a.give) Game.give(a.give);
           if (a.journal) Game.addJournal(a.journal);
           if (a.end) { Game.finish(); return; }
@@ -220,6 +222,7 @@
           tools.innerHTML = '';
           setTimeout(function () {
             if (p.set) Game.setFlags(p.set);
+            if (p.remember) Game.remember(p.remember);
             if (p.give) Game.give(p.give);
             if (p.journal) Game.addJournal(p.journal);
             if (p.goto) Game.goto(p.goto);

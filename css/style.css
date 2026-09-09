@@ -481,6 +481,7 @@ body::after{ /* jemné zrno */
 .ring.is-set .ring-sym{color:var(--amber)}
 
 @media (max-width:560px){
+  .dial-wheel{padding:10px 11px;font-size:13px}
   .chapters{margin-top:24px}
   .chapter-card{padding:10px 12px;gap:11px}
   .chapter-title{font-size:15px}
@@ -504,6 +505,25 @@ body::after{ /* jemné zrno */
   font-family:var(--font-story);font-size:18px;line-height:1.55;color:var(--cream);
   text-align:center;margin-bottom:18px;max-width:38ch;margin-left:auto;margin-right:auto
 }
+
+/* --- mluvčí (mise 4) --- */
+.line-bruno .say-who{color:#a8c4b0}
+.line-bruno .say-text{color:#dceadf}
+
+/* --- kotoučový zámek se slovy (mise 4) --- */
+.dial{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.dial-wheel{
+  display:flex;align-items:center;gap:7px;
+  padding:12px 14px;border-radius:var(--radius-sm);
+  background:var(--panel-2);border:1px solid var(--line-soft);
+  color:var(--cream);font:600 15px/1 var(--font-ui);letter-spacing:.06em;
+  cursor:pointer;transition:border-color .2s ease, background .2s ease, transform .12s ease;
+}
+.dial-wheel:hover:not(:disabled){border-color:var(--amber);background:#24404f}
+.dial-wheel:active:not(:disabled){transform:translateY(1px)}
+.dial-wheel:disabled{cursor:default;border-color:var(--amber);color:var(--amber-soft)}
+.dial-caret{font-size:10px;color:var(--muted)}
+.dial-wheel:disabled .dial-caret{opacity:0}
 
 /* --- mluvčí (mise 3) --- */
 .line-klara .say-who{color:#c9b6e8}

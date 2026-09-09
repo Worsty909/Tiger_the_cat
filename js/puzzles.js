@@ -456,6 +456,49 @@
     }
   });
 
+  /* ---------------------------------------------------------
+     8) DIAL — řada koleček, na každém jedno slovo.
+        Kliknutí posune jen svoje kolečko, kruhy se nestrhávají.
+        Hotovo, když všechna ukazují správné slovo.
+     puzzle: { kind:'dial', wheels:[ { options:['A','B'], answer:1, start:0 } ] }
+     --------------------------------------------------------- */
+  register('dial', {
+    render: function (host, p, api) {
+      var wheels = p.wheels || [];
+      var state = wheels.map(function (w) { return w.start || 0; });
+      var solved = false;
+
+      var row = el('div', 'dial');
+      host.appendChild(row);
+
+      function done() {
+        return wheels.every(function (w, i) { return state[i] === w.answer; });
+      }
+
+      function draw() {
+        row.innerHTML = '';
+        wheels.forEach(function (w, i) {
+          var b = el('button', 'dial-wheel');
+          b.appendChild(el('span', 'dial-word', w.options[state[i]]));
+          b.appendChild(el('span', 'dial-caret', '\u25be'));
+          b.disabled = solved;
+          b.addEventListener('click', function () {
+            state[i] = (state[i] + 1) % w.options.length;
+            draw();
+            if (done()) {
+              solved = true;
+              draw();
+              setTimeout(function () { api.solve(); }, 420);
+            }
+          });
+          row.appendChild(b);
+        });
+      }
+
+      draw();
+    }
+  });
+
   global.Tiger = global.Tiger || {};
   global.Tiger.Puzzles = { register: register, get: get };
 

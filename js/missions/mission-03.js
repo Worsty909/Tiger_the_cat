@@ -598,6 +598,7 @@
       /* ====== 12a. KONEC — ZŮSTAT ====== */
       {
         id: 'konec-zustat',
+        remember: { zustal: true },
         place: 'Kovářská 9 · okno',
         title: 'Zůstat',
         bg: 'm3-konec',
@@ -629,6 +630,7 @@
       /* ====== 12b. KONEC — ODEJÍT ====== */
       {
         id: 'konec-odejit',
+        remember: { zustal: false },
         place: 'Kovářská 11 · sklep',
         title: 'Odejít',
         bg: 'm3-konec',

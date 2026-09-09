@@ -48,6 +48,24 @@
     return (i > -1 && missionOrder[i + 1]) ? missionOrder[i + 1] : null;
   }
 
+  /* ---------- uložený postup napříč misemi ---------- */
+
+  function readProgress() {
+    var data = null;
+    try { data = JSON.parse(localStorage.getItem(PROGRESS_KEY)); } catch (e) {}
+    if (!data || typeof data !== 'object') data = {};
+    return {
+      version: 1,
+      done: Array.isArray(data.done) ? data.done : [],
+      choices: (data.choices && typeof data.choices === 'object') ? data.choices : {}
+    };
+  }
+
+  function writeProgress(store) {
+    try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(store)); }
+    catch (e) { /* privátní režim — postup se prostě neuloží */ }
+  }
+
   /* ---------- stav hry ---------- */
 
   function freshState(missionId) {
@@ -120,6 +138,7 @@
 
       if (typeof scene.onEnter === 'function') scene.onEnter(this);
       if (scene.set) this.setFlags(scene.set);
+      if (scene.remember) this.remember(scene.remember);
       if (scene.give) this.give(scene.give);
       if (scene.journal) this.addJournal(scene.journal);
 
@@ -205,22 +224,26 @@
       });
     },
 
-    /* --- dohrané kapitoly ---
-       Drží se mimo uloženou pozici, aby výběr kapitol přežil novou hru. */
-    completed: function () {
-      try {
-        var data = JSON.parse(localStorage.getItem(PROGRESS_KEY));
-        return (data && Array.isArray(data.done)) ? data.done : [];
-      } catch (e) { return []; }
-    },
+    /* --- postup napříč misemi ---
+       Drží se mimo uloženou pozici, aby výběr kapitol i rozhodnutí
+       z předchozích dílů přežily novou hru. */
+    completed: function () { return readProgress().done; },
     isCompleted: function (id) { return this.completed().indexOf(id) > -1; },
     markCompleted: function (id) {
-      var done = this.completed();
-      if (done.indexOf(id) > -1) return;
-      done.push(id);
-      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify({ version: 1, done: done })); }
-      catch (e) { /* privátní režim — kapitola prostě zůstane zamčená */ }
+      var store = readProgress();
+      if (store.done.indexOf(id) > -1) return;
+      store.done.push(id);
+      writeProgress(store);
     },
+
+    // Rozhodnutí, na které se má ptát až některá z dalších misí.
+    // Příznaky v `state.flags` to neumí — ty končí s misí.
+    remember: function (obj) {
+      var store = readProgress();
+      Object.keys(obj || {}).forEach(function (k) { store.choices[k] = obj[k]; });
+      writeProgress(store);
+    },
+    recall: function (key) { return readProgress().choices[key]; },
 
     // Odemčená je první kapitola, každá dohraná a ta hned po dohrané.
     isUnlocked: function (id) {

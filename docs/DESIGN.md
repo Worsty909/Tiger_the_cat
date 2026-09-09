@@ -64,15 +64,45 @@ Nitky schválně nechané viset:
   ji stihne zapomenout. Ani jeden není ten „správný"; příznak `zustal` je
   uložený pro pokračování.
 
-### Nitky pro misi 4
+### Co odhalila mise 4 (rok 2038)
 
-- **Sedmnáct let, která chybí.** Kláru ztratil v roce 2009, probudil se
-  v dodávce v roce 2026 a mezi tím si nepamatuje nic. Podle vlastního pravidla
-  tam tedy někdo musel být — někdo, kdo ho smazal i s ní. Tiger to vysloví
-  na konci mise 3 a nemá k tomu jediné vodítko.
-- Co se stane, až Ema vyroste a Tiger zapomene i ji?
-- Funguje vůbec „pamatovat si to za někoho"? Zatím to nikdo nezkusil.
-- Bertík má jednu vzpomínku, na které mu záleží. Tiger nemá žádnou.
+- **Sešity nefungují.** Přečíst někomu jeho život mu ho nevrátí — vrátí mu
+  data. Tiger je umí odříkat a nic u toho necítí. Tohle je ta odpověď a nesmí
+  se změkčovat.
+- **Funguje jediná věc: dovést ho k té věci znovu.** Vtip s pianem ho baví
+  pokaždé, protože ho pokaždé slyší poprvé. Ema hledala něco, co jde i bez
+  vzpomínky, a našla to.
+- **Chybějících sedmnáct let: Vojtěch Řehák, Krátká 2, 1941–2026.** Měl Tigera
+  od roku 2011. Nikdy nevyvěsil, že se mu ztratil kocour — vyvěšoval kartičky
+  „nechte ho být, vrátí se sám". Devatenáct kartiček za patnáct let.
+- **Nikdy mu nedal jméno.** Usoudil, že nějaké má (známka byla sedřená
+  a nečitelná — což mise 2 stanovila) a že mu nepřísluší dávat mu jiné. Čtyři
+  lidé mu dali čtyři cizí jména; ten, kdo ho měl nejdéle, žádné.
+- **Kauzalita je obrácená.** Poslední kartička je z října 2025, Řehák umřel
+  v lednu 2026. Tiger tedy neodešel proto, že o někoho přišel — nejdřív
+  zapomněl a pak odešel od živého člověka. Není ten, komu se ztrácejí lidi.
+  Je ten, kdo odchází.
+- **„E." není Elena.** Plakát MIKEŠ (2026) vylepila Klára po babiččině smrti,
+  když Tigera zahlédla u Krátké, a číslo pak sama vztekle přeškrtala.
+  Tu tužkou psanou větu připsala sedmiletá Ema — o kocourovi, kterého nikdy
+  neviděla. Celá mise 1 se rozjela kvůli dítěti, které o něm jenom slýchalo.
+- **Vilém je pryč, archiv ne.** Třídí ho Bruno, který neumí číst a neví, co
+  v tom je. Ví jenom, že se to nesmí ztratit, protože mu to někdo řekl.
+  Vilémovo pravidlo: třídí se podle ruky, ne podle obsahu.
+- **Dvě věty, které se potkaly.** Řehák: „Vrátí se sám. Vždycky se vrátí."
+  Ema v sedmi letech na první stránku sešitu: „Tiger se vždycky vrátí domů."
+  Nikdy se neviděli. Popisovali tu samou poruchu.
+- **Rozhodnutí z mise 3** se čte přes `Game.recall('zustal')` a mění jednu
+  scénu ze tří. Kdo misi 3 nehrál, dostane neutrální variantu.
+
+### Nitky dál
+
+- Ema si spočítala, že to přichází jednou za dvanáct až sedmnáct let. Vzorek
+  jsou tři body. Až se to stane počtvrté, bude jí přes třicet.
+- Návod v sešitě číslo čtyřicet dvě je zatím vyzkoušený jednou.
+- Bertík měl jednu vzpomínku, na které mu záleželo. Přežila ho — ale jenom
+  proto, že si ji někdo zapsal.
+- Co se stane, až umře Ema. Tuhle otázku série zatím ani jednou nevyslovila.
 
 ### Nitky pro misi 3 (vyřešeno)
 
@@ -97,7 +127,13 @@ Nitky schválně nechané viset:
 | 2019 | narodí se Ema |
 | 2024 | Elena kupuje nový obojek, který nestihne nasadit |
 | listopad 2025 | Elena umírá ve spánku, je jí 72 |
+| 2011 | Tiger se usadí u Vojtěcha Řeháka, Krátká 2 — čtyři minuty od Kovářské |
+| 2011–2025 | Řehák vyvěšuje kartičky „nechte ho být, vrátí se sám" |
+| říjen 2025 | poslední kartička: „Už se nevrátil." Tiger odešel od živého člověka |
+| leden 2026 | Vojtěch Řehák umírá. Poslední rozloučení v úzkém kruhu |
+| březen 2026 | Klára ho zahlédne u Krátké, vylepí plakát MIKEŠ, přeškrtá číslo; sedmiletá Ema pod něj tužkou připíše „prosím vrať se. — E." |
 | 2026 | mise 1–3, tři noční hodiny a jedno dopoledne |
+| 2038 | mise 4. Tiger zapomene znovu. Emě je devatenáct a má čtyřicet jedna sešitů |
 
 Tigerovi bylo vždycky stejně. Mezi 2009 a 2026 mu chybí paměť i vysvětlení —
 viz nitky pro misi 4.
@@ -206,6 +242,13 @@ Odpovědi musí sedět na skutečná data těch hádanek, ne na paměť autora.
 **`pairs`** — spojovačka. **`rings`** — soustředné kruhy, otočení strhne
 i ten pod sebou; validátor ověří řešitelnost hrubou silou.
 
+**`dial`** — řada koleček, na každém jedno slovo; kliknutí posune jenom svoje
+kolečko. Hotovo, když všechna ukazují správné slovo.
+```js
+{ kind: 'dial', wheels: [ { options: ['UŽ','NIKDY','SE'], answer: 2, start: 1 } ] }
+```
+Validátor odmítne zadání, které je rovnou vyřešené.
+
 **Nový typ** se registruje zvenčí, engine se nemusí měnit:
 ```js
 Tiger.Puzzles.register('muj-typ', {
@@ -214,6 +257,20 @@ Tiger.Puzzles.register('muj-typ', {
   }
 });
 ```
+
+### Rozhodnutí, na které se ptá až další mise
+
+Příznaky v `state.flags` končí s misí — `advance()` je zahodí a výběr kapitol
+je nikdy nevytvoří. Co má přežít, se zapisuje vedle:
+
+```js
+{ id: 'konec-zustat', remember: { zustal: true }, /* … */ }   // scéna nebo akce
+g.recall('zustal')                                            // v podmínce if
+```
+
+Ukládá se do `tiger.progress.v1` společně s dohranými kapitolami, takže to
+přežije i „Novou hru". Počítej vždycky s tím, že hodnota může být `undefined`
+— hráč mohl skočit rovnou přes výběr kapitol.
 
 ## Pravidla, která drží hru pohromadě
 

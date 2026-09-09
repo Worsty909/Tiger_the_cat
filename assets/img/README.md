@@ -1,6 +1,8 @@
 # Obrázky
 
-Všech 31 obrázků tu už je, jako `webp` o šířce 900 px (titulka 1200 px).
+Všech 31 obrázků z misí 1 až 3 tu je jako `webp` o šířce 900 px (titulka
+1200 px). Deset obrázků mise 4 zatím ne — hra je bere z CDN a vykresluje
+náhradní panel, když ani to neprojde.
 
 Hra hledá pro každou scénu soubor `<klíč>.<přípona>` v této složce. Zkouší
 `avif`, `webp`, `png`, `jpg`, `jpeg` — v tomhle pořadí. Když chceš některý
@@ -55,6 +57,21 @@ Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál
 | `m3-1961` | fotka z roku 1961 — Elena jako dítě |
 | `m3-sklep-den` | sklep za denního světla, s Bertíkem |
 | `m3-konec` | parapet na slunci (oba konce) |
+
+### Mise 4 — Až zapomenu
+
+| Klíč | Kde se objeví |
+|------|---------------|
+| `m4-pokoj` | probuzení bez paměti, Ema čte nahlas |
+| `m4-ema` | Ema v devatenácti, police se sešity |
+| `m4-sesity` | stůl pod čtyřiceti jedna sešity |
+| `m4-most` | Bruno na zděděném hnízdě |
+| `m4-archiv` | čtyři komínky tříděné podle ruky |
+| `m4-karta` | devatenáct kartiček z Krátké |
+| `m4-kratka` | Krátká 2, prázdné okno |
+| `m4-plakat` | plakát MIKEŠ vyhrabaný z vrstev |
+| `m4-piano` | piano v obýváku, cihla pod nohou |
+| `m4-konec` | parapet za soumraku, Ema píše |
 
 ## Doporučení
 
