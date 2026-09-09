@@ -18,8 +18,8 @@
     /* ---------- předměty ---------- */
     items: {
       plakat:  { emo: '📄', name: 'Utržený plakát',  desc: 'Nejstarší z nich. Jméno TIGER.' },
-      znamka:  { emo: '🏷️', name: 'Mosazná známka', desc: 'Z jeho vlastního obojku. Něco je na ní vyryté.' },
-      klic:    { emo: '🔑', name: 'Klíček od schránky', desc: 'Vilémův honorář. Malý, ohmataný.' }
+      znamka:  { emo: '🏷️', name: 'Mosazná známka', desc: 'Druhá. Elena ji nechala vyrýt stejně jako tu jeho.' },
+      klic:    { emo: '🔑', name: 'Klíček od schránky', desc: 'Visel na hřebíčku vedle šestky. Malý, ohmataný.' }
     },
 
     /* ---------- deník ---------- */

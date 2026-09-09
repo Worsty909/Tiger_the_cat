@@ -30,7 +30,7 @@
       },
       'j-pojistky': {
         title: 'Světlo',
-        text: 'Naučil jsem se, že tři páčky nikdy nejsou tři páčky. Vždycky jsou to tři páčky a jejich sousedi.'
+        text: 'Naučil jsem se, že jedna páčka nikdy není jedna páčka. Vždycky je to páčka a oba její sousedi. Docela přesný popis většiny věcí.'
       },
       'j-fotka': {
         title: 'Ta fotka',
@@ -289,7 +289,7 @@
           { beat: true },
           { tiger: 'Bertíku. Kdo mě sem přinesl?' },
           'Bertík se poprvé nezasmál. Sundal si víčko z hlavy, jako se sundává čepice, když se mluví o vážných věcech.',
-          { bertik: 'Někdo, kdo tuhle bednu zamykal. A někdo, kdo znal ten kód, protože si ho vymyslel sám. Před hodně dlouhou dobou.' },
+          { bertik: 'Někdo, kdo tuhle bednu zamykal. A někdo, kdo znal ten kód, protože si ho vymyslela sama. Před hodně dlouhou dobou.' },
           { bertik: 'Já jenom sklep spravuju, kocoure. Ne vysvětluju.' }
         ],
         actions: [
@@ -348,8 +348,10 @@
           'Tiger vyletěl do vzduchu tak vysoko, že se sám sobě podivil, minul cihlu, přistál na víku piana a víko se s dunivým *bum* otevřelo.',
           { tiger: '…' },
           { tiger: 'To si někdo naladil schválně.' },
-          { bertik: 'Roky to ladil. Roky!' },
-          { bertik: 'A pak roky čekal, jestli to někdo najde. Umřel dřív, než se to stalo. Tobě to trvalo devět minut, kocoure. Devět. Minut.' },
+          { bertik: 'Roky to ladila. Roky!' },
+          { bertik: 'A pak roky čekala, jestli to někdo najde. Umřela dřív, než se to stalo. Tobě to trvalo devět minut, kocoure. Devět. Minut.' },
+          { tiger: 'Ona?' },
+          { bertik: 'Sklep spravuju. Nevysvětluju.' },
           { beat: true },
           'Ve víku piana, mezi strunami a prachem, ležela těžká železná klika. Ta, co pasuje na okenní západky.',
           'Tiger si ji vzal do zubů. A pak, protože ho to napadlo, ještě jednou opatrně šlápl na H, A, F.',

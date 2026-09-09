@@ -42,7 +42,7 @@ bez grafiky.
 ## Co hra umí
 
 - **Postupné odkrývání textu** klepnutím, s rozlišením vypravěče, Tigera a vedlejších postav
-- **Čtyři typy hádanek** (viz níže), všechny ovladatelné myší nebo klávesnicí
+- **Sedm typů hádanek** (viz níže), všechny ovladatelné myší nebo klávesnicí
 - **Nápovědy** u každé hádanky, odstupňované — poslední tě prakticky dovede k odpovědi
 - **Odpovědi bez ohledu na diakritiku a velikost písmen** (`Klavír` = `klavir` = `PIANO`)
 - **Deník vzpomínek** — sbírá se během hraní a je to hlavní nosič příběhu do dalších dílů

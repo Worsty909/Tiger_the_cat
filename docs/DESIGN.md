@@ -37,8 +37,8 @@ Nitky schválně nechané viset:
   Elena nechala vyrýt druhou.
 - **Vilém** doručuje zprávu, jejíž adresát dávno neexistuje. Je to Tigerovo
   zrcadlo: obě postavy dělají totéž, jen jedna si to přiznává.
-- **Holčička v okně** vypadá přesně jako Elena na fotce z roku 2009 a drží
-  červený obojek. Zná Tigerovo jméno. Tohle je hlavní otázka mise 3.
+- **Holčička v okně** vypadá přesně jako ta holčička na fotce z roku 2009 a
+  drží červený obojek. Zná Tigerovo jméno. Tohle je hlavní otázka mise 3.
 
 ### Co odhalila mise 3 (odpovědi)
 
@@ -52,9 +52,12 @@ Nitky schválně nechané viset:
   být nemohla — to byla Klára.
 - **Elena ho potkala jako dítě v roce 1961.** Její hledání nebyla starost o
   vnuččinu kočku, ale o kocoura z vlastního dětství.
-- **Kdo ho zavřel do sklepa: nikdo.** Skočil si do dodávky sám. Bedna, kód 415
-  a sardinky byly Elenina skrýš, jedna ze čtyřiceti. Tigerova domněnka
-  z konce mise 1 byla mylná — příběh není spiknutí, ale ztráta.
+- **Kdo ho zavřel do sklepa: nikdo naschvál.** Skočil si do dodávky sám a usnul
+  v bedně se zavařeninami. Tu pak někdo snesl do sklepa a zavřel poklop, aniž
+  o něm věděl — Bertíkovo „přinesli" z mise 1 platí, jen znamená něco jiného,
+  než si obě strany myslely. Bedna se zámkem, kód 415 a sardinky byly Elenina
+  skrýš, jedna ze čtyřiceti. Tigerova domněnka z konce mise 1 byla mylná —
+  příběh není spiknutí, ale ztráta.
 - **Vilémovo pouzdro** obsahovalo Elenin vzkaz adresovaný Tigerovi. Doručeno
   po sedmnácti letech.
 - **Dva konce.** Zůstat (Ema si to bude pamatovat za něj) nebo odejít dřív, než
@@ -63,6 +66,10 @@ Nitky schválně nechané viset:
 
 ### Nitky pro misi 4
 
+- **Sedmnáct let, která chybí.** Kláru ztratil v roce 2009, probudil se
+  v dodávce v roce 2026 a mezi tím si nepamatuje nic. Podle vlastního pravidla
+  tam tedy někdo musel být — někdo, kdo ho smazal i s ní. Tiger to vysloví
+  na konci mise 3 a nemá k tomu jediné vodítko.
 - Co se stane, až Ema vyroste a Tiger zapomene i ji?
 - Funguje vůbec „pamatovat si to za někoho"? Zatím to nikdo nezkusil.
 - Bertík má jednu vzpomínku, na které mu záleží. Tiger nemá žádnou.
@@ -74,6 +81,26 @@ Nitky schválně nechané viset:
 - Kdo Tigera odnesl do sklepa a proč zrovna teď?
 - Tiger si nepamatuje nic před dodávkou. Ta ztráta paměti je záměrná, ne
   vypravěčská zkratka.
+
+### Časová osa (kánon)
+
+| Rok | Co se stalo |
+|-----|-------------|
+| 1953 | narodí se Elena Marešová |
+| 1961 | Eleně je 8, potkává Tigera; toho roku si pořizuje album |
+| ~1976 | Elena se stěhuje do Kovářské 9 — bydlí tam padesát let |
+| 2002 | narodí se Klára, Elenina vnučka |
+| 2009 | Kláře je 7, fotka „já a Tiger", Tiger se ztrácí; první plakát TIGER |
+| 2009–2026 | Elena hledá. Vidí ho čtyřikrát — vždycky zdálky, vždycky za tím následuje nový plakát: BARON 2015, TYGŘÍK 2020, MIKEŠ 2026 |
+| ~2009–2016 | týdenní obchůzka čtyřiceti sklepů; poslední zápis 3. 11. 2016 |
+| 2016–2025 | na schody už nemá sílu, sešity ale píše dál |
+| 2019 | narodí se Ema |
+| 2024 | Elena kupuje nový obojek, který nestihne nasadit |
+| listopad 2025 | Elena umírá ve spánku, je jí 72 |
+| 2026 | mise 1–3, tři noční hodiny a jedno dopoledne |
+
+Tigerovi bylo vždycky stejně. Mezi 2009 a 2026 mu chybí paměť i vysvětlení —
+viz nitky pro misi 4.
 
 **Tón:** vtipné a hluboké se musí střídat, ne mísit. Scéna je buď komická,
 nebo srdcervoucí. Když je obojí najednou, není ani jedno.
@@ -168,9 +195,16 @@ nebo `stack`. Volba s `trap` je past s vlastní hláškou.
   solution: ['h','a','f'] }
 ```
 
-**`choice`** — jedna volba z několika. Volba s `correct: false` je špatně,
-volba se `set` nastaví příznak. Bez `correct: false` nejde vybrat špatně —
-hodí se na rozhodnutí, která mají mít následky až později.
+**`choice`** — jedna volba z několika. Správná musí mít `correct: true`
+výslovně, každá ostatní potřebuje `say` s reakcí na omyl. Validátor hlídá, že
+správná je právě jedna; kdyby stačilo „není označená jako špatná", udělal by
+opomenutý příznak v datech mise tiše z chybné volby správnou.
+
+**`recall`** — postava se ptá na to, co hráč zažil v dřívějších misích.
+Odpovědi musí sedět na skutečná data těch hádanek, ne na paměť autora.
+
+**`pairs`** — spojovačka. **`rings`** — soustředné kruhy, otočení strhne
+i ten pod sebou; validátor ověří řešitelnost hrubou silou.
 
 **Nový typ** se registruje zvenčí, engine se nemusí měnit:
 ```js
