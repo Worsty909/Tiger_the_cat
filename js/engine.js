@@ -57,7 +57,10 @@
     return {
       version: 1,
       done: Array.isArray(data.done) ? data.done : [],
-      choices: (data.choices && typeof data.choices === 'object') ? data.choices : {}
+      choices: (data.choices && typeof data.choices === 'object') ? data.choices : {},
+      // deník každé dohrané mise — aby ho měl i hráč, který další kapitolu
+      // spustí z výběru kapitol, ne přes „Pokračovat" na konci mise
+      journal: (data.journal && typeof data.journal === 'object') ? data.journal : {}
     };
   }
 
@@ -80,10 +83,36 @@
       solved: [],
       attempts: 0,
       hintsUsed: 0,
-      startedAt: Date.now(),
+      playMs: 0,
       finished: false
     };
   }
+
+  // Deník si hráč nese z misí, které leží před tou, kterou začíná.
+  function earlierJournal(missionId) {
+    var store = readProgress();
+    var out = [];
+    for (var i = 0; i < missionOrder.length && missionOrder[i] !== missionId; i++) {
+      (store.journal[missionOrder[i]] || []).forEach(function (id) {
+        if (out.indexOf(id) === -1) out.push(id);
+      });
+    }
+    return out;
+  }
+
+  // Zápis do deníku se hledá ve všech misích — deník se nese dál.
+  function journalEntry(id) {
+    for (var i = 0; i < missionOrder.length; i++) {
+      var lib = missions[missionOrder[i]].journal || {};
+      if (lib[id]) return { id: id, missionId: missionOrder[i], title: lib[id].title, text: lib[id].text };
+    }
+    return null;
+  }
+
+  // Čas hraní se počítá jen za aktivitu: mezera delší než IDLE_MS mezi dvěma
+  // akcemi (zavřený prohlížeč, oběd) se započítá jako IDLE_MS.
+  var IDLE_MS = 3 * 60 * 1000;
+  var lastTick = Date.now();
 
   var Game = {
     state: null,
@@ -104,7 +133,9 @@
     /* --- životní cyklus --- */
     start: function (missionId) {
       this.state = freshState(missionId || firstMissionId());
+      this.state.journal = earlierJournal(this.state.missionId);
       this.mission = getMission(this.state.missionId);
+      lastTick = Date.now();
       this.save();
       this.emit('start', this.state);
       this.goto(this.mission.start);
@@ -118,6 +149,8 @@
       if (!this.mission) return false;
       var scene = this.scene(saved.sceneId);
       if (!scene) return false;
+      if (typeof saved.playMs !== 'number') saved.playMs = 0;   // starší uložená hra
+      lastTick = Date.now();
       this.emit('start', this.state);
       this.goto(saved.sceneId);
       return true;
@@ -179,10 +212,7 @@
       this.save();
     },
     journalEntries: function () {
-      var lib = (this.mission && this.mission.journal) || {};
-      return this.state.journal.map(function (id) {
-        return lib[id] || { title: id, text: '' };
-      });
+      return this.state.journal.map(journalEntry).filter(Boolean);
     },
 
     markSolved: function (id) {
@@ -195,21 +225,27 @@
     countHint: function () { this.state.hintsUsed++; this.save(); },
 
     /* --- přechod na další misi ---
-       Deník a odemčené vzpomínky si hráč nese dál; předměty a příznaky
-       zůstávají v misi, ve které je nasbíral. */
+       Deník si hráč nese dál; předměty, příznaky a statistiky zůstávají
+       v misi, ve které je nasbíral. */
     advance: function () {
       var nextId = nextMissionId(this.state.missionId);
       if (!nextId) return false;
       var carriedJournal = this.state.journal.slice();
-      var startedAt = this.state.startedAt;
-      this.state = freshState(nextId);
-      this.state.journal = carriedJournal;
-      this.state.startedAt = startedAt;
-      this.mission = getMission(nextId);
+      this.start(nextId);
+      // start() vezme deník z uloženého postupu; tenhle je ale přesnější —
+      // obsahuje i zápisy z mise, kterou hráč právě dohrál.
+      var self = this;
+      carriedJournal.forEach(function (id) {
+        if (self.state.journal.indexOf(id) === -1) self.state.journal.push(id);
+      });
       this.save();
-      this.emit('start', this.state);
-      this.goto(this.mission.start);
+      this.emit('journal');
       return true;
+    },
+
+    restart: function () {
+      this.wipe();
+      this.start(this.state ? this.state.missionId : firstMissionId());
     },
 
     /* --- konec mise --- */
@@ -217,6 +253,14 @@
       this.state.finished = true;
       this.markCompleted(this.state.missionId);
       this.save();
+      var self = this;
+      var mine = this.state.journal.filter(function (id) {
+        var e = journalEntry(id);
+        return e && e.missionId === self.state.missionId;
+      });
+      var store = readProgress();
+      store.journal[this.state.missionId] = mine;
+      writeProgress(store);
       this.emit('finish', {
         mission: this.mission,
         state: this.state,
@@ -254,6 +298,10 @@
 
     /* --- ukládání --- */
     save: function () {
+      if (!this.state) return;
+      var now = Date.now();
+      if (!this.state.finished) this.state.playMs = (this.state.playMs || 0) + Math.min(now - lastTick, IDLE_MS);
+      lastTick = now;
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(this.state)); }
       catch (e) { /* privátní režim prohlížeče — hra běží dál, jen bez uložení */ }
     },

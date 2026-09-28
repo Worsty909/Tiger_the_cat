@@ -18,29 +18,49 @@ otevírá víc otázek, než zavírá.
 holčička, proč Tiger nestárne, co bylo v holubím pouzdře — a dva různé konce
 podle toho, jak se hráč rozhodne.
 
-Mise na sebe navazují — po dohrání jedničky se dá plynule pokračovat a deník
-si hráč nese s sebou.
+**Mise 4 — „Až zapomenu"** (19 scén, 5 hádanek): rok 2038, Tiger bez paměti
+a čtyřicet jedna sešitů, které za něj pamatují. Jedna scéna se liší podle toho,
+jak hráč dohrál trojku.
+
+Mise na sebe navazují — po dohrání jedné se dá plynule pokračovat a deník
+si hráč nese s sebou (i když další kapitolu spustí z výběru kapitol).
 
 ## Kde si zahrát
 
 **<https://worsty909.github.io/Tiger_the_cat/>**
 
 Nasazuje se automaticky při každém pushi do výchozí větve
-(`.github/workflows/pages.yml`).
+(`.github/workflows/pages.yml`). Workflow nejdřív spustí validátor misí —
+s chybou se hra nenasadí — a pak doplní obrázky (viz níže).
 
 ## Jak to spustit lokálně
 
 Otevři `index.html` v prohlížeči. To je všechno — žádný build, žádné závislosti,
 čisté HTML/CSS/JS.
 
-Všech 11 obrázků je součástí repozitáře v `assets/img/` (dohromady 442 kB), takže
-hra funguje i offline. Kdyby některý chyběl, načte se z CDN — adresy jsou
-v `js/assets.js` a `tools/fetch-assets.sh` je umí stáhnout znovu. Když se
-nepodaří ani to, hra vykreslí stylizovaný náhradní panel: dohrát se dá i úplně
-bez grafiky.
+Obrázky, které leží v `assets/img/`, se načtou z disku; ostatní hra vezme
+přímo z adresy v `js/assets.js`. Když se nepodaří ani to, vykreslí stylizovaný
+náhradní panel: dohrát se dá i úplně bez grafiky.
+
+## Obrázky — jak přidat nový
+
+Stačí **jeden řádek** v `js/assets.js`:
+
+```js
+'m5-most': 'https://…adresa vygenerovaného obrázku…',
+```
+
+a ve scéně `bg: 'm5-most'`. Nic se nestahuje ani nepřevádí ručně — při
+nasazení to udělá workflow (`tools/build-images.py`): obrázek stáhne, zmenší
+na 900 px, uloží jako webp a zapamatuje si ho v cache, takže se příště už
+nestahuje. Hotový web tak dostává malé webp soubory, ne několikamegabajtová PNG.
+
+Chceš některý obrázek přepsat vlastním? Nakopíruj ho do `assets/img/` jako
+`<klíč>.webp`, `.png` nebo `.jpg` — soubor v repozitáři má vždycky přednost.
 
 ## Co hra umí
 
+- **Čtyři mise**, rozhodnutí z konce trojky se promítne do čtyřky
 - **Postupné odkrývání textu** klepnutím, s rozlišením vypravěče, Tigera a vedlejších postav
 - **Osm typů hádanek** (viz níže), všechny ovladatelné myší nebo klávesnicí
 - **Nápovědy** u každé hádanky, odstupňované — poslední tě prakticky dovede k odpovědi
@@ -48,6 +68,7 @@ bez grafiky.
 - **Deník vzpomínek** — sbírá se během hraní a je to hlavní nosič příběhu do dalších dílů
 - **Inventář** a příznaky, na kterých se dají větvit scény
 - **Automatické ukládání** do `localStorage`, zavřít okno je bezpečné
+- **Přednačítání** obrázků scén, kam se dá jít dál — přechody bez čekání
 - **Výběr kapitol** na titulce — kapitola se odemyká dohráním té předchozí
 - **Hra se nedá pokazit** tak, aby nešla dohrát
 
@@ -64,17 +85,18 @@ bez grafiky.
 ## Struktura projektu
 
 ```
-index.html               kostra a obrazovky
-css/style.css            celý vizuál
-js/engine.js             stav hry, scény, ukládání, registr misí
-js/assets.js             kde hra bere obrázky (lokálně → CDN)
-js/puzzles.js            registr typů hádanek
-js/ui.js                 vykreslování scén, dialogů a hádanek
-js/game.js               propojení enginu, UI a ovládání
-js/missions/mission-01.js   celá mise 1 jako data
-tools/fetch-assets.sh    stáhne obrázky do repozitáře
-tools/validate-mission.js kontrola, že příběhový graf drží pohromadě
-docs/DESIGN.md           jak přidat další misi + příběhová bible
+index.html                  kostra a obrazovky
+css/style.css               celý vizuál
+js/engine.js                stav hry, scény, ukládání, registr misí
+js/assets.js                seznam obrázků (klíč → adresa) a jejich načítání
+js/puzzles.js               registr typů hádanek
+js/ui.js                    vykreslování scén, dialogů a hádanek
+js/game.js                  propojení enginu, UI a ovládání
+js/missions/mission-0N.js   každá mise jako data
+assets/img/                 obrázky v repozitáři (mají přednost před adresou)
+tools/build-images.py       při deployi doplní a převede obrázky na webp
+tools/validate-mission.js   kontrola, že příběhový graf drží pohromadě
+docs/DESIGN.md              jak přidat další misi + příběhová bible
 ```
 
 ## Kontrola integrity
@@ -86,8 +108,12 @@ node tools/validate-mission.js
 ```
 
 Ověří, že všechny přechody míří na existující scény, že je každá scéna dosažitelná,
-že hádanky mají řešení (u pojistek to zkusí hrubou silou), že mise má konec
-a že se neodkazuje na neexistující předměty a zápisy v deníku.
+že hádanky mají řešení (u pojistek a kruhů to zkusí hrubou silou), že mise má konec
+a že se neodkazuje na neexistující předměty, zápisy v deníku a obrázky.
+
+Navíc hledá **zákysy**: projde všechny stavy, do kterých se hráč může dostat
+(scéna + batoh + příznaky, a u mise 4 každou variantu rozhodnutí z trojky),
+a z každého musí vést cesta ke konci. Běží i při každém deployi.
 
 ## Pokračování
 

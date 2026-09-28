@@ -1,16 +1,29 @@
 # Obrázky
 
-Všech 31 obrázků z misí 1 až 3 tu je jako `webp` o šířce 900 px (titulka
-1200 px). Deset obrázků mise 4 zatím ne — hra je bere z CDN a vykresluje
-náhradní panel, když ani to neprojde.
+Seznam všech obrázků je **jen v `js/assets.js`** (klíč scény → adresa).
+Tahle složka drží obrázky, které jsou přímo v repozitáři — mají přednost
+před adresou.
 
-Hra hledá pro každou scénu soubor `<klíč>.<přípona>` v této složce. Zkouší
-`avif`, `webp`, `png`, `jpg`, `jpeg` — v tomhle pořadí. Když chceš některý
-obrázek vyměnit, stačí ho sem nakopírovat pod správným klíčem; na formátu
-nezáleží.
+## Jak to funguje
 
-Když tu soubor není, hra ho načte z CDN (adresy jsou v `js/assets.js`).
-Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál.
+- **Při nasazení** workflow spustí `tools/build-images.py`. Pro každý klíč
+  z `js/assets.js` vezme `<klíč>.webp` z téhle složky; když tu je jen
+  `.png` / `.jpg`, převede ho; když tu není nic, stáhne obrázek z adresy.
+  Všechno zmenší na 900 px (titulku na 1200 px) a uloží jako webp q78.
+  Stažené obrázky si workflow drží v cache, takže každý stahuje jen jednou.
+- **Ve hře** se zkouší `assets/img/<klíč>.webp`, pak adresa, a když selže
+  obojí, vykreslí se stylizovaný náhradní panel.
+
+Nový obrázek tedy nepotřebuje nic stahovat ani převádět: stačí řádek
+v `js/assets.js`. Který obrázek leží kde, vypíše `node tools/validate-mission.js`
+(sekce „Obrázky").
+
+Doplnit obrázky do repozitáře lokálně (třeba pro hraní offline) jde jedním
+příkazem, potřebuje jen Pillow:
+
+```bash
+python3 tools/build-images.py --out assets/img
+```
 
 ## Seznam
 
@@ -72,25 +85,6 @@ Když neuspěje ani to, vykreslí stylizovaný náhradní panel a jde hrát dál
 | `m4-plakat` | plakát MIKEŠ vyhrabaný z vrstev |
 | `m4-piano` | piano v obýváku, cihla pod nohou |
 | `m4-konec` | parapet za soumraku, Ema píše |
-
-## Doporučení
-
-Šířka kolem 900 px bohatě stačí — hra obrázek zobrazuje maximálně v 860 px
-a překrývá ho vinětou. Menší soubory znamenají rychlejší načtení.
-
-Nejjednodušší cesta:
-
-```bash
-bash tools/fetch-assets.sh
-```
-
-Stáhne všechno, zmenší a pojmenuje správně.
-
-## Nový obrázek pro další misi
-
-1. Přidej řádek do `REMOTE` v `js/assets.js` (nebo jen ulož soubor sem).
-2. Přidej řádek do `ASSETS` v `tools/fetch-assets.sh`.
-3. Ve scéně nastav `bg: '<klíč>'`.
 
 Aby Tiger vypadal ve všech scénách stejně, předávej při generování
 `tiger-ref` jako referenční obrázek — postup je popsaný v `docs/DESIGN.md`.

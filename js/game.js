@@ -20,16 +20,15 @@
     $('btnContinue').hidden = !Game.hasSave();
     renderChapters();
 
-    // Pozadí titulky: první zdroj, který se opravdu načte.
-    var art = $('titleArt');
-    var list = global.Tiger.Assets.sources('titul');
-    (function tryNext(i) {
-      if (i >= list.length) return;
-      var probe = new Image();
-      probe.onload = function () { art.style.backgroundImage = 'url("' + list[i] + '")'; };
-      probe.onerror = function () { tryNext(i + 1); };
-      probe.src = list[i];
-    })(0);
+    global.Tiger.Assets.load('titul', function (url) {
+      if (url) $('titleArt').style.backgroundImage = 'url("' + url + '")';
+    });
+
+    // Zatímco hráč čte titulku, stáhne se obrázek první scény, kterou nejspíš otevře.
+    var saved = Game.load();
+    var m = global.Tiger.getMission(saved && !saved.finished ? saved.missionId : global.Tiger.firstMissionId());
+    var sc = m && m.scenes.filter(function (x) { return x.id === (saved && !saved.finished ? saved.sceneId : m.start); })[0];
+    if (sc) global.Tiger.Assets.preload(sc.bg);
   }
 
   /* ---------- výběr kapitol ----------
@@ -122,11 +121,10 @@
         Game.goto(Game.state.sceneId);
       }));
 
-      list.appendChild(menuBtn('Začít misi od začátku', function () {
-        if (!confirm('Opravdu začít misi 1 od začátku?')) return;
+      list.appendChild(menuBtn('Začít tuhle misi od začátku', function () {
+        if (!confirm('Opravdu začít „' + Game.mission.title + '" od začátku?')) return;
         UI.closeModal();
-        Game.wipe();
-        Game.start(global.Tiger.firstMissionId());
+        Game.restart();
       }));
 
       list.appendChild(menuBtn('Zpět na titulní obrazovku', function () {
@@ -181,7 +179,9 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { UI.closeModal(); return; }
-    if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+    if (!$('modal').hidden) return;
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'BUTTON') return;   // Enter na tlačítku ho má zmáčknout
     if ((e.key === 'Enter' || e.key === ' ') && UI.revealing) {
       e.preventDefault();
       UI.revealNext();

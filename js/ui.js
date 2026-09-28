@@ -37,7 +37,15 @@
         var s = $('screen-' + n);
         if (s) s.classList.toggle('is-active', n === name);
       });
-      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+      window.scrollTo(0, 0);
+      // Fokus nesmí zůstat na tlačítku skryté obrazovky — jinak by Enter
+      // a mezerník nešly použít k posouvání textu.
+      var a = document.activeElement;
+      if (a && a !== document.body && !a.closest('.screen.is-active, .modal-backdrop')) a.blur();
+    },
+    isShown: function (name) {
+      var s = $('screen-' + name);
+      return !!(s && s.classList.contains('is-active'));
     },
 
     /* ---------- scéna ---------- */
@@ -50,6 +58,7 @@
       $('sceneTitle').textContent = scene.title || '';
 
       this.setArt(scene.bg, scene.title || scene.place || '');
+      global.Tiger.Assets.preload(nextBackgrounds(scene));
 
       $('dialogue').innerHTML = '';
       $('puzzleSlot').innerHTML = '';
@@ -64,33 +73,33 @@
       this.renderJournalBadge();
     },
 
-    // Obrázek se hledá postupně ve všech zdrojích (lokálně, pak vzdáleně).
-    // Když nevyjde ani jeden, zůstane stylovaný náhradní panel.
+    // Obrázek najde Assets.load (lokálně, pak vzdáleně). Když nevyjde nic,
+    // zůstane stylovaný náhradní panel. Stejný obrázek jako minulá scéna
+    // se nepřekresluje — jinak by při každém kroku blikl.
     setArt: function (bg, altText) {
       var img = $('sceneImg');
       var fb = $('sceneFallback');
       $('sceneFallbackText').textContent = altText || '';
-      img.classList.remove('is-loaded');
       img.alt = altText || '';
+      if (bg && bg === this.artKey && img.classList.contains('is-loaded')) return;
+
+      this.artKey = bg;
+      img.classList.remove('is-loaded');
       fb.hidden = false;
+      if (!bg) { img.removeAttribute('src'); return; }
 
-      var list = global.Tiger.Assets.sources(bg);
-      if (!list.length) { img.removeAttribute('src'); return; }
-
-      var i = 0;
-      img.onload = function () { img.classList.add('is-loaded'); fb.hidden = true; };
-      img.onerror = function () {
-        i++;
-        if (i < list.length) { img.src = list[i]; return; }
-        img.classList.remove('is-loaded');
-        fb.hidden = false;
-      };
-      img.src = list[0];
+      var self = this;
+      global.Tiger.Assets.load(bg, function (url) {
+        if (self.artKey !== bg) return;          // hráč mezitím odešel jinam
+        if (!url) { img.removeAttribute('src'); return; }
+        img.onload = function () { img.classList.add('is-loaded'); fb.hidden = true; };
+        img.src = url;
+      });
     },
 
     /* ---------- postupné odkrývání textu ---------- */
     revealNext: function () {
-      if (!this.revealing) return;
+      if (!this.revealing || !this.isShown('game')) return;
       var box = $('dialogue');
 
       if (!this.revealQueue.length) {
@@ -107,15 +116,6 @@
         var self = this;
         setTimeout(function () { self.afterText(); }, 220);
       }
-    },
-
-    revealAll: function () {
-      while (this.revealQueue.length) {
-        $('dialogue').appendChild(renderLine(this.revealQueue.shift()));
-      }
-      this.revealing = false;
-      $('advanceHint').hidden = true;
-      this.afterText();
     },
 
     /* ---------- co přijde po textu: hádanka nebo volby ---------- */
@@ -137,6 +137,9 @@
       var list = (scene.actions || []).filter(function (a) { return Game.check(a.if); });
 
       if (!list.length && scene.goto) list = [{ label: scene.nextLabel || 'Dál', goto: scene.goto }];
+      // Hádanka vyřešená, ale přechod po ní nestihl proběhnout (hráč zavřel
+      // okno během prodlevy) — po návratu musí jít pokračovat.
+      if (!list.length && scene.puzzle && scene.puzzle.goto) list = [{ label: scene.nextLabel || 'Dál', goto: scene.puzzle.goto }];
       if (!list.length && scene.end) list = [{ label: scene.nextLabel || 'Dál', end: true }];
       if (!list.length) return;
 
@@ -158,6 +161,7 @@
     /* ---------- hádanka ---------- */
     renderPuzzle: function (p) {
       var slot = $('puzzleSlot');
+      var scene = this.currentScene;
       slot.innerHTML = '';
       slot.hidden = false;
 
@@ -184,6 +188,7 @@
 
       var self = this;
       var wrongCount = 0;
+      var finished = false;   // po vyřešení už hádanka nereaguje (rychlé klikání)
 
       function say(text, kind) {
         feedback.className = 'puzzle-feedback' + (kind ? ' is-' + kind : '');
@@ -191,6 +196,7 @@
       }
 
       function giveHint() {
+        if (finished) return;
         if (hintIdx >= hints.length) {
           say(p.lastHint || 'Víc už ti neporadím. Věř si.', 'hint');
           return;
@@ -206,6 +212,7 @@
         say: say,
         hint: giveHint,
         fail: function (msg) {
+          if (finished) return;
           Game.countAttempt();
           wrongCount++;
           say(msg || 'To není ono.', 'bad');
@@ -217,6 +224,9 @@
           }
         },
         solve: function () {
+          if (finished) return;
+          finished = true;
+          box.classList.add('is-solved');
           Game.markSolved(p.id);
           say(p.success || 'Cvak. Sedí to.', 'good');
           tools.innerHTML = '';
@@ -225,8 +235,10 @@
             if (p.remember) Game.remember(p.remember);
             if (p.give) Game.give(p.give);
             if (p.journal) Game.addJournal(p.journal);
+            // hráč mezitím odešel (menu, titulka) — pokračování nabídne renderActions
+            if (self.currentScene !== scene || !self.isShown('game')) return;
             if (p.goto) Game.goto(p.goto);
-            else { slot.hidden = true; self.renderActions(self.currentScene); }
+            else { slot.hidden = true; self.renderActions(scene); }
           }, p.delay || 900);
         }
       };
@@ -268,9 +280,16 @@
       var body = $('modalBody');
       body.innerHTML = '';
       buildBody(body);
+      if ($('modal').hidden) this.lastFocus = document.activeElement;
       $('modal').hidden = false;
+      $('modalClose').focus();
     },
-    closeModal: function () { $('modal').hidden = true; },
+    closeModal: function () {
+      if ($('modal').hidden) return;
+      $('modal').hidden = true;
+      if (this.lastFocus && document.contains(this.lastFocus)) this.lastFocus.focus();
+      this.lastFocus = null;
+    },
 
     openJournal: function () {
       this.openModal('Deník vzpomínek', function (body) {
@@ -280,14 +299,29 @@
             'Zatím prázdný. Tiger si zapíše všechno, co ho zastaví a donutí přemýšlet.'));
           return;
         }
+        // Deník se nese napříč misemi — zápisy se seskupí podle kapitol.
+        var groups = [];
         entries.forEach(function (e) {
+          var g = groups[groups.length - 1];
+          if (!g || g.missionId !== e.missionId) groups.push(g = { missionId: e.missionId, list: [] });
+          g.list.push(e);
+        });
+        groups.forEach(function (g) {
+          var m = Tiger.getMission(g.missionId);
+          if (groups.length > 1 && m) {
+            body.appendChild(el('h4', 'journal-chapter', 'Mise ' + m.number + ' · ' + m.title));
+          }
+          g.list.forEach(renderEntry);
+        });
+
+        function renderEntry(e) {
           var d = el('div', 'journal-entry');
           var t = document.createElement('b');
           t.textContent = e.title;
           d.appendChild(t);
           d.appendChild(document.createTextNode(e.text));
           body.appendChild(d);
-        });
+        }
       });
     },
 
@@ -302,12 +336,12 @@
       text.innerHTML = '';
       normalizeText(ep.text).forEach(function (line) { text.appendChild(renderLine(line)); });
 
-      var mins = Math.max(1, Math.round((Date.now() - s.startedAt) / 60000));
+      var mins = Math.max(1, Math.round((s.playMs || 0) / 60000));
       var stats = [
         ['Vyřešené hádanky', s.solved.length],
         ['Slepé uličky', s.attempts],
         ['Nápovědy', s.hintsUsed],
-        ['Minut ve tmě', mins]
+        ['Minut na cestě', mins]
       ];
       var host = $('endStats');
       host.innerHTML = '';
@@ -334,6 +368,18 @@
       this.show('end');
     }
   };
+
+  // Obrázky scén, kam se dá z téhle scény dojít — přednačtou se na pozadí.
+  function nextBackgrounds(scene) {
+    var ids = [scene.goto, scene.puzzle && scene.puzzle.goto]
+      .concat((scene.actions || []).map(function (a) { return a.goto; }));
+    var out = [];
+    ids.forEach(function (id) {
+      var s = id && Game.scene(id);
+      if (s && s.bg && s.bg !== scene.bg && out.indexOf(s.bg) === -1) out.push(s.bg);
+    });
+    return out;
+  }
 
   /* ---------- převod textu na řádky ---------- */
   function normalizeText(text) {

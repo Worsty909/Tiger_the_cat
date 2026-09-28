@@ -172,7 +172,7 @@ Tiger.registerMission({
   id: 'prvni-scena',
   place: 'Ulice',            // do horní lišty
   title: 'Nadpis scény',
-  bg: 'klic-obrazku',        // js/assets.js → assets/img/<klic>.avif
+  bg: 'klic-obrazku',        // klíč z js/assets.js
   give: ['klic'],            // předměty do batohu při vstupu
   set: { neco: true },       // příznaky
   journal: 'j-neco',         // zápis do deníku
@@ -280,7 +280,10 @@ přežije i „Novou hru". Počítej vždycky s tím, že hodnota může být `u
 3. **Žádná obratnost, žádný čas.** Jenom klikání a psaní.
 4. **Nová postava dostane jeden vtip a jednu vážnou větu.** Bertík je měřítko.
 5. **Před commitem obsahu spusť validátor.** Chyby v grafu jsou levné najít
-   a drahé ladit v prohlížeči.
+   a drahé ladit v prohlížeči. Hlídá i zákysy — podmínky `if` vyhodnocuje
+   doopravdy pro každý stav batohu a příznaků. Deploy s chybou neprojde.
+6. **Id zápisů v deníku musí být jedinečná napříč misemi.** Deník se nese
+   z mise do mise a zápis se dohledává ve všech; validátor to hlídá.
 
 ## Obrázky
 
@@ -294,4 +297,9 @@ Společná hlavička promptu, ať série drží pohromadě:
 
 Aby Tiger vypadal ve všech scénách stejně, předává se do každé generace
 referenční portrét (`tiger-ref` v `js/assets.js`) jako `image_references`.
-Nový obrázek = přidat řádek do `js/assets.js` a do `tools/fetch-assets.sh`.
+
+Nový obrázek = **jeden řádek** v `js/assets.js` (klíč → adresa, kterou vrátí
+generátor). Nic se nestahuje ani nepřevádí ručně: deploy obrázek stáhne,
+zmenší na 900 px a uloží jako webp (`tools/build-images.py`). Přegenerovat
+obrázek = změnit adresu na tom řádku a smazat případný `assets/img/<klíč>.webp`,
+který by jinak měl přednost.

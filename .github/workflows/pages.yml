@@ -1,5 +1,6 @@
 # Nasazení hry na GitHub Pages.
-# Stránka je statická (žádný build), takže se obsah repozitáře nahraje tak, jak je.
+# Hra sama žádný build nepotřebuje; workflow jen ověří mise a doplní obrázky:
+# co v assets/img/ chybí, stáhne podle js/assets.js a převede na webp.
 name: Deploy na GitHub Pages
 
 on:
@@ -30,15 +31,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Kontrola misí
+        run: node tools/validate-mission.js
+
+      # Stažené obrázky se drží mezi běhy — každý se stahuje jen jednou.
+      - uses: actions/cache@v4
+        with:
+          path: .image-cache
+          key: images-${{ hashFiles('js/assets.js') }}
+          restore-keys: images-
+
+      - name: Sestavit web
+        run: |
+          pip install --quiet pillow
+          mkdir -p _site/assets
+          cp -r index.html css js _site/
+          python3 tools/build-images.py --out _site/assets/img
+
       # enablement: true zapne Pages i v repozitáři, kde ještě nejsou zapnuté.
       - uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      # Kořen repozitáře je rovnou kořen webu. .git a .github se vynechávají samy.
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -37,8 +37,11 @@
     render: function (host, p, api) {
       var row = el('div', 'answer-row');
       var input = el('input', 'answer-input');
-      input.type = p.numeric ? 'text' : 'text';
-      if (p.numeric) { input.inputMode = 'numeric'; input.setAttribute('autocomplete', 'off'); }
+      input.type = 'text';
+      input.setAttribute('autocomplete', 'off');
+      input.setAttribute('autocapitalize', 'off');
+      input.spellcheck = false;
+      if (p.numeric) input.inputMode = 'numeric';
       input.placeholder = p.placeholder || 'Napiš odpověď…';
       input.maxLength = p.maxLength || 40;
       input.setAttribute('aria-label', p.placeholder || 'Odpověď');
@@ -500,6 +503,6 @@
   });
 
   global.Tiger = global.Tiger || {};
-  global.Tiger.Puzzles = { register: register, get: get };
+  global.Tiger.Puzzles = { register: register, get: get, kinds: function () { return Object.keys(types); } };
 
 })(window);
